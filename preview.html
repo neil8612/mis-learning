@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIS 學習庫 V1</title>
+<style>
+body { font-family: Arial; margin: 0; background:#0f172a; color:white;}
+header { padding:15px; text-align:center; background:#1e293b;}
+.container { padding:15px;}
+.card { background:#1e293b; padding:10px; margin-bottom:10px; border-radius:10px;}
+button { padding:5px 10px; margin:3px; border:none; border-radius:5px;}
+.learned { background:green; color:white;}
+.nav { display:flex; justify-content:space-around; background:#1e293b; position:fixed; bottom:0; width:100%;}
+input { width:100%; padding:8px; margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<header>MIS 技術英文學習庫</header>
+
+<div class="container" id="app"></div>
+
+<div class="nav">
+<button onclick="showPage('home')">首頁</button>
+<button onclick="showPage('search')">速查</button>
+<button onclick="showPage('quiz')">測驗</button>
+</div>
+
+<script>
+const words = [
+{en:"permission denied", zh:"沒有權限", tag:"Linux"},
+{en:"command not found", zh:"指令不存在", tag:"Linux"},
+{en:"connection refused", zh:"連線被拒絕", tag:"Network"},
+{en:"disk full", zh:"磁碟滿了", tag:"System"},
+{en:"service unavailable", zh:"服務不可用", tag:"Server"},
+{en:"timeout", zh:"逾時", tag:"Network"},
+{en:"access denied", zh:"存取被拒", tag:"Security"},
+{en:"file not found", zh:"找不到檔案", tag:"System"}
+];
+
+let learned = JSON.parse(localStorage.getItem("learned")||"[]");
+
+function speak(text){
+  let msg = new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(msg);
+}
+
+function toggleLearn(word){
+  if(learned.includes(word)){
+    learned = learned.filter(w=>w!==word);
+  } else {
+    learned.push(word);
+  }
+  localStorage.setItem("learned", JSON.stringify(learned));
+  showPage(currentPage);
+}
+
+function renderWord(w){
+  return `
+  <div class="card">
+    <b>${w.en}</b><br>
+    ${w.zh}<br>
+    <button onclick="speak('${w.en}')">🔊</button>
+    <button class="${learned.includes(w.en)?'learned':''}" onclick="toggleLearn('${w.en}')">
+      ${learned.includes(w.en)?'已學會':'標記'}
+    </button>
+  </div>`;
+}
+
+let currentPage="home";
+
+function showPage(page){
+  currentPage = page;
+  const app = document.getElementById("app");
+
+  if(page==="home"){
+    let random = words.sort(()=>0.5-Math.random()).slice(0,3);
+    app.innerHTML = "<h3>今日推薦</h3>" + random.map(renderWord).join("");
+  }
+
+  if(page==="search"){
+    app.innerHTML = `
+      <input placeholder="搜尋..." oninput="searchWord(this.value)">
+      <div id="result"></div>`;
+    searchWord("");
+  }
+
+  if(page==="quiz"){
+    startQuiz();
+  }
+}
+
+function searchWord(q){
+  const result = document.getElementById("result");
+  let list = words.filter(w=>w.en.includes(q)||w.zh.includes(q));
+  result.innerHTML = list.map(renderWord).join("");
+}
+
+let quizList = [];
+let score = 0;
+let index = 0;
+
+function startQuiz(){
+  quizList = words.sort(()=>0.5-Math.random()).slice(0,5);
+  score = 0;
+  index = 0;
+  showQuestion();
+}
+
+function showQuestion(){
+  const app = document.getElementById("app");
+
+  if(index >= quizList.length){
+    app.innerHTML = `<h3>完成！分數：${score}/5</h3>
+    <button onclick="startQuiz()">再來一次</button>`;
+    return;
+  }
+
+  let q = quizList[index];
+  let options = words.sort(()=>0.5-Math.random()).slice(0,4);
+  if(!options.includes(q)) options[0]=q;
+
+  app.innerHTML = `
+    <h3>${q.en}</h3>
+    ${options.map(o=>`<button onclick="answer('${o.zh}','${q.zh}')">${o.zh}</button>`).join("<br>")}
+  `;
+}
+
+function answer(a,b){
+  if(a===b) score++;
+  index++;
+  showQuestion();
+}
+
+showPage("home");
+</script>
+
+</body>
+</html>
