@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MIS學習庫">
+<title>MIS 技術英文學習庫</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+:root{
+  --bg:#0a0f1a;--bg2:#111827;--bg3:#1a2235;--border:#1e3a5f;
+  --accent:#00d4ff;--accent2:#00ff9d;--accent3:#ff6b35;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#475569;
+  --red:#ff4757;--yellow:#ffd700;--green:#00ff9d;
+  --card:#131d2e;--card2:#0f1929;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.mono{font-family:'JetBrains Mono',monospace}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)}
+.topbar-title{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);font-weight:700;letter-spacing:1px}
+.topbar-streak{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--yellow);font-weight:600}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;position:sticky;top:49px;z-index:99}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:11px 16px;font-size:12px;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;font-weight:500}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,0.06)}
+.tab:hover:not(.active){color:var(--text2);background:rgba(255,255,255,0.03)}
+.page{display:none;padding:16px;max-width:600px;margin:0 auto;min-height:calc(100vh - 100px);animation:fadeIn .25s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.progress-wrap{margin:8px 0}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:5px}
+.progress-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .6s ease}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:'Noto Sans TC',sans-serif}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#0099bb);color:#000}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,212,255,0.3)}
+.btn-success{background:rgba(0,255,157,0.15);color:var(--accent2);border:1px solid rgba(0,255,157,0.3)}
+.btn-danger{background:rgba(255,71,87,0.15);color:var(--red);border:1px solid rgba(255,71,87,0.3)}
+.btn-ghost{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,0.08)}
+.btn-sm{padding:5px 10px;font-size:11px;border-radius:6px}
+.btn-full{width:100%;justify-content:center}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.badge-1{background:rgba(0,255,157,0.15);color:var(--accent2);border:1px solid rgba(0,255,157,0.2)}
+.badge-2{background:rgba(0,212,255,0.15);color:var(--accent);border:1px solid rgba(0,212,255,0.2)}
+.badge-3{background:rgba(255,107,53,0.15);color:var(--accent3);border:1px solid rgba(255,107,53,0.2)}
+.input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:'Noto Sans TC',sans-serif;outline:none;transition:border .2s;width:100%}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
+.input::placeholder{color:var(--text3)}
+.select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;cursor:pointer;width:100%}
+.select:focus{border-color:var(--accent)}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.stat-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.stat-val{font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent)}
+.stat-label{font-size:11px;color:var(--text2);margin-top:3px}
+.task-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.task-item:last-child{border-bottom:none}
+.task-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .2s}
+.task-check.done{background:var(--accent2);border-color:var(--accent2);color:#000}
+.task-text{font-size:13px;color:var(--text2);transition:all .2s}
+.task-check.done+.task-text{text-decoration:line-through;color:var(--text3)}
+.vocab-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;transition:border .2s}
+.vocab-card:hover{border-color:var(--accent)}
+.vocab-card.learned{border-color:rgba(0,255,157,0.3);background:rgba(0,255,157,0.03)}
+.vocab-header{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.vocab-en{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--text)}
+.vocab-zh{font-size:13px;color:var(--text2);margin-top:4px}
+.vocab-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.vocab-detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.vocab-detail.open{display:block}
+.detail-row{margin-bottom:8px}
+.detail-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;font-family:'JetBrains Mono',monospace}
+.detail-val{font-size:13px;color:var(--text2);line-height:1.5}
+.detail-cmd{font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--bg3);padding:6px 10px;border-radius:6px;color:var(--accent2);border:1px solid var(--border);display:block;margin-top:4px;word-break:break-all}
+.related-tags{display:flex;gap:5px;flex-wrap:wrap}
+.related-tag{font-size:11px;padding:3px 8px;border-radius:4px;background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2);cursor:pointer;font-family:'JetBrains Mono',monospace}
+.vocab-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.speak-btn{background:none;border:none;color:var(--text3);cursor:pointer;padding:4px;font-size:16px;transition:color .2s}
+.speak-btn:hover{color:var(--accent)}
+.search-wrap{display:flex;gap:8px;margin-bottom:12px}
+.filter-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;margin-bottom:8px}
+.filter-scroll::-webkit-scrollbar{display:none}
+.filter-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text2);transition:all .2s;white-space:nowrap;font-family:'Noto Sans TC',sans-serif}
+.filter-btn.active{background:rgba(0,212,255,0.15);border-color:var(--accent);color:var(--accent)}
+.quiz-option{padding:14px 16px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;margin-bottom:8px;font-size:14px;transition:all .2s}
+.quiz-option:hover:not(.disabled){border-color:var(--accent);background:rgba(0,212,255,0.08)}
+.quiz-option.correct{border-color:var(--accent2);background:rgba(0,255,157,0.1);color:var(--accent2)}
+.quiz-option.wrong{border-color:var(--red);background:rgba(255,71,87,0.1);color:var(--red)}
+.quiz-option.disabled{cursor:default}
+.quiz-en{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:20px;font-weight:700}
+.quiz-feedback{padding:12px 16px;border-radius:10px;margin-top:10px;font-size:13px;line-height:1.5}
+.quiz-feedback.right{background:rgba(0,255,157,0.1);border:1px solid rgba(0,255,157,0.3);color:var(--accent2)}
+.quiz-feedback.wrong{background:rgba(255,71,87,0.1);border:1px solid rgba(255,71,87,0.3);color:var(--red)}
+.emergency-btn{width:100%;padding:20px;border-radius:12px;background:linear-gradient(135deg,rgba(255,71,87,0.15),rgba(255,107,53,0.1));border:1px solid rgba(255,71,87,0.4);color:var(--red);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;margin-bottom:16px;font-family:'JetBrains Mono',monospace}
+.emergency-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,71,87,0.2)}
+.cmd-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.cmd-line{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cmd-code{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent2);flex:1;word-break:break-all}
+.cmd-desc{font-size:12px;color:var(--text3);margin-top:4px}
+.copy-btn{padding:4px 10px;border-radius:5px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:var(--accent);font-size:10px;cursor:pointer;white-space:nowrap;font-family:'JetBrains Mono',monospace;transition:all .2s;flex-shrink:0}
+.copy-btn.copied{background:rgba(0,255,157,0.15);border-color:rgba(0,255,157,0.3);color:var(--accent2)}
+.heatmap{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;margin:10px 0}
+.heatmap-cell{aspect-ratio:1;border-radius:2px;background:var(--bg3)}
+.heatmap-cell.l1{background:rgba(0,212,255,0.2)}
+.heatmap-cell.l2{background:rgba(0,212,255,0.5)}
+.heatmap-cell.l3{background:var(--accent)}
+.heatmap-months{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.review-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);color:var(--yellow)}
+.path-stage{border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.path-stage.current{border-color:var(--accent);background:rgba(0,212,255,0.05)}
+.path-stage.done{border-color:rgba(0,255,157,0.3);background:rgba(0,255,157,0.03)}
+.path-stage-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.path-stage-sub{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.6}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:600px;max-height:80vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent);font-family:'JetBrains Mono',monospace;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:10px 20px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.journal-entry{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px}
+.journal-date{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+.journal-content{font-size:13px;color:var(--text2);line-height:1.6}
+.journal-kw{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.journal-kw span{font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(0,212,255,0.1);color:var(--accent);border:1px solid rgba(0,212,255,0.2)}
+.weakness-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.weakness-label{font-size:12px;color:var(--text2);width:90px;flex-shrink:0}
+.weakness-bar-wrap{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.weakness-bar{height:100%;border-radius:4px;transition:width .8s ease}
+.weakness-pct{font-size:12px;color:var(--text3);width:36px;text-align:right;font-family:'JetBrains Mono',monospace}
+.section-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace;margin:16px 0 8px}
+.alert{padding:12px 16px;border-radius:10px;font-size:13px;margin-bottom:12px;line-height:1.5}
+.alert-info{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--text2)}
+.alert-warn{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);color:var(--yellow)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.score-display{text-align:center;padding:24px}
+.score-num{font-size:64px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent)}
+.score-label{font-size:16px;color:var(--text2);margin-top:4px}
+.score-detail{font-size:14px;color:var(--text3);margin-top:8px}
+.er-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px}
+.er-error{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--accent3);font-weight:700;margin-bottom:12px}
+.er-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.er-value{font-size:13px;color:var(--text2);line-height:1.5}
+.claude-btn{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:10px;background:linear-gradient(135deg,rgba(0,212,255,0.1),rgba(0,255,157,0.05));border:1px solid rgba(0,212,255,0.3);color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;width:100%;justify-content:center;transition:all .2s;margin-bottom:10px;font-family:'Noto Sans TC',sans-serif}
+.reminder-banner{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.3);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:13px;color:var(--yellow)}
+.fill-area{display:flex;flex-direction:column;gap:10px}
+.form-group{display:flex;flex-direction:column;gap:10px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">⚡ MIS學習庫</div>
+  <div class="topbar-streak">🔥 <span id="streakNum">0</span>天連續</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showPage('home')">🏠 首頁</div>
+  <div class="tab" onclick="showPage('vocab')">📚 速查表</div>
+  <div class="tab" onclick="showPage('emergency')">🚨 緊急查詢</div>
+  <div class="tab" onclick="showPage('quiz')">🎯 測驗</div>
+  <div class="tab" onclick="showPage('commands')">💾 指令庫</div>
+  <div class="tab" onclick="showPage('path')">🗺️ 學習路徑</div>
+  <div class="tab" onclick="showPage('journal')">📝 日誌</div>
+  <div class="tab" onclick="showPage('stats')">📊 統計</div>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div id="reminderBanner" class="reminder-banner" style="display:none">
+    ⚠️ 你已經 <span id="reminderDays">3</span> 天沒學習了，今天繼續加油！
+  </div>
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-val" id="homeLearnedCount">0</div><div class="stat-label">已學會詞彙</div></div>
+    <div class="stat-item"><div class="stat-val" id="homeTotalCount">300</div><div class="stat-label">總詞彙數</div></div>
+    <div class="stat-item"><div class="stat-val" id="homeReviewCount">0</div><div class="stat-label">今日待複習</div></div>
+    <div class="stat-item"><div class="stat-val" id="homeWrongCount">0</div><div class="stat-label">錯題本</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 今日任務</div>
+    <div id="taskList">
+      <div class="task-item"><div class="task-check" id="task1" onclick="toggleTask(1)"></div><div class="task-text">學完今日推薦詞彙</div></div>
+      <div class="task-item"><div class="task-check" id="task2" onclick="toggleTask(2)"></div><div class="task-text">完成一次測驗</div></div>
+      <div class="task-item"><div class="task-check" id="task3" onclick="toggleTask(3)"></div><div class="task-text">記錄一筆學習日誌</div></div>
+    </div>
+    <div id="taskComplete" style="display:none;text-align:center;padding:10px;color:var(--accent2);font-weight:700">🎉 今日任務全部完成！</div>
+  </div>
+  <div id="reviewCard" class="card" style="display:none">
+    <div class="card-title">🔄 今日複習 <span class="review-chip" id="reviewChip">0個</span></div>
+    <div id="reviewList"></div>
+    <button class="btn btn-primary btn-full" onclick="showPage('quiz');startReviewQuiz()" style="margin-top:10px">開始複習測驗</button>
+  </div>
+  <div class="card">
+    <div class="card-title">✨ 今日推薦</div>
+    <div id="todayRecommend"></div>
+    <button class="btn btn-ghost btn-full btn-sm" onclick="refreshRecommend()" style="margin-top:10px">🔀 換一批</button>
+  </div>
+  <button class="emergency-btn" onclick="showPage('emergency')">🚨 緊急查詢 — 遇到看不懂的錯誤訊息點這裡</button>
+</div>
+
+<!-- VOCAB -->
+<div id="page-vocab" class="page">
+  <div class="search-wrap">
+    <input class="input" id="vocabSearch" placeholder="搜尋英文、中文、關鍵字..." oninput="renderVocab()">
+  </div>
+  <div class="filter-scroll">
+    <button class="filter-btn active" onclick="setFilter('cat','all',this)">全部</button>
+    <button class="filter-btn" onclick="setFilter('cat','linux',this)">Linux</button>
+    <button class="filter-btn" onclick="setFilter('cat','network',this)">網路/資安</button>
+    <button class="filter-btn" onclick="setFilter('cat','docker',this)">Docker</button>
+    <button class="filter-btn" onclick="setFilter('cat','cloud',this)">雲端/DevOps</button>
+    <button class="filter-btn" onclick="setFilter('cat','vmware',this)">VMware</button>
+    <button class="filter-btn" onclick="setFilter('cat','bios',this)">BIOS</button>
+  </div>
+  <div class="filter-scroll">
+    <button class="filter-btn active" onclick="setFilter('lvl','all',this)">全部等級</button>
+    <button class="filter-btn" onclick="setFilter('lvl','1',this)">⭐ 基礎</button>
+    <button class="filter-btn" onclick="setFilter('lvl','2',this)">⭐⭐ 進階</button>
+    <button class="filter-btn" onclick="setFilter('lvl','3',this)">⭐⭐⭐ 專業</button>
+    <button class="filter-btn" onclick="setFilter('lvl','wrong',this)">❌ 錯題本</button>
+    <button class="filter-btn" onclick="setFilter('lvl','review',this)">🔄 待複習</button>
+  </div>
+  <div id="vocabList"></div>
+  <button class="btn btn-success btn-full" onclick="openModal('addVocabModal')" style="margin-top:8px">＋ 新增自訂詞彙</button>
+</div>
+
+<!-- EMERGENCY -->
+<div id="page-emergency" class="page">
+  <div class="alert alert-warn">⚡ 遇到看不懂的錯誤？輸入關鍵字秒查解法</div>
+  <div class="search-wrap">
+    <input class="input" id="erSearch" placeholder="輸入錯誤訊息，例如：permission denied" oninput="searchEmergency()">
+  </div>
+  <div id="erResults"></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">🤖 問 Claude AI</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.6">遇到查不到的問題，貼給 Claude 解析，取得中文意思+解法+指令</p>
+    <button class="claude-btn" onclick="openClaude()">💬 開啟 Claude 對話提問</button>
+    <div class="alert alert-info" style="font-size:12px">Claude 回覆後，可以把結果新增到速查表的自訂詞彙</div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="page-quiz" class="page">
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <button class="btn btn-primary" onclick="startQuiz('mc')" style="flex:1">四選一</button>
+    <button class="btn btn-ghost" onclick="startQuiz('fill')" style="flex:1">填空</button>
+    <button class="btn btn-ghost" onclick="startQuiz('wrong')" style="flex:1">❌ 錯題</button>
+  </div>
+  <div id="quizArea"></div>
+</div>
+
+<!-- COMMANDS -->
+<div id="page-commands" class="page">
+  <div class="alert alert-info">點指令右側「複製」即可貼到終端機使用</div>
+  <div id="cmdCats"></div>
+  <button class="btn btn-success btn-full" onclick="openModal('addCmdModal')" style="margin-top:8px">＋ 新增指令</button>
+</div>
+
+<!-- PATH -->
+<div id="page-path" class="page">
+  <div class="alert alert-info">依照路線循序學習，打好基礎再進進階</div>
+  <div class="filter-scroll" style="margin-bottom:14px">
+    <button class="filter-btn active" onclick="showPath('beginner',this)">🌱 新手路線</button>
+    <button class="filter-btn" onclick="showPath('mis',this)">🏢 MIS日常路線</button>
+  </div>
+  <div id="pathContent"></div>
+</div>
+
+<!-- JOURNAL -->
+<div id="page-journal" class="page">
+  <button class="btn btn-primary btn-full" onclick="openModal('addJournalModal')">＋ 新增今日記錄</button>
+  <div style="margin-top:14px" id="journalList"></div>
+</div>
+
+<!-- STATS -->
+<div id="page-stats" class="page">
+  <div class="card">
+    <div class="card-title">🌡️ 學習熱力圖 (近91天)</div>
+    <div class="heatmap-months" id="heatmapMonths"></div>
+    <div class="heatmap" id="heatmap"></div>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:8px;justify-content:flex-end">
+      <span style="font-size:11px;color:var(--text3)">少</span>
+      <div style="width:10px;height:10px;border-radius:2px;background:var(--bg3);border:1px solid var(--border)"></div>
+      <div style="width:10px;height:10px;border-radius:2px;background:rgba(0,212,255,0.2)"></div>
+      <div style="width:10px;height:10px;border-radius:2px;background:rgba(0,212,255,0.6)"></div>
+      <div style="width:10px;height:10px;border-radius:2px;background:var(--accent)"></div>
+      <span style="font-size:11px;color:var(--text3)">多</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 各分類進度</div>
+    <div id="catProgress"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🎯 弱點分析</div>
+    <div id="weaknessChart"></div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-item"><div class="stat-val" id="statQuizCount">0</div><div class="stat-label">測驗次數</div></div>
+    <div class="stat-item"><div class="stat-val" id="statAvgScore">-</div><div class="stat-label">平均分數</div></div>
+    <div class="stat-item"><div class="stat-val" id="statWeekCount">0</div><div class="stat-label">本週學習</div></div>
+    <div class="stat-item"><div class="stat-val" id="statCustomCount">0</div><div class="stat-label">自訂詞彙</div></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="addVocabModal" class="modal-overlay" onclick="closeModalOutside(event,'addVocabModal')">
+  <div class="modal">
+    <div class="modal-title">＋ 新增自訂詞彙 <button class="modal-close" onclick="closeModal('addVocabModal')">✕</button></div>
+    <div class="form-group">
+      <input class="input" id="av_en" placeholder="英文 (必填)">
+      <input class="input" id="av_zh" placeholder="中文意思 (必填)">
+      <select class="select" id="av_cat">
+        <option value="linux">Linux / Server</option>
+        <option value="network">網路 / 資安</option>
+        <option value="docker">Docker / 虛擬化</option>
+        <option value="cloud">雲端 / DevOps</option>
+        <option value="vmware">VMware</option>
+        <option value="bios">BIOS / 硬體</option>
+        <option value="custom">自訂</option>
+      </select>
+      <select class="select" id="av_lvl">
+        <option value="1">⭐ 基礎</option>
+        <option value="2">⭐⭐ 進階</option>
+        <option value="3">⭐⭐⭐ 專業</option>
+      </select>
+      <input class="input" id="av_cause" placeholder="原因/說明">
+      <input class="input" id="av_fix" placeholder="解法/指令">
+      <input class="input" id="av_example" placeholder="情境例句">
+      <input class="input" id="av_keyword" placeholder="記憶關鍵字 (逗號分隔)">
+      <button class="btn btn-primary btn-full" onclick="saveCustomVocab()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div id="addJournalModal" class="modal-overlay" onclick="closeModalOutside(event,'addJournalModal')">
+  <div class="modal">
+    <div class="modal-title">📝 新增學習記錄 <button class="modal-close" onclick="closeModal('addJournalModal')">✕</button></div>
+    <div class="form-group">
+      <select class="select" id="jn_type">
+        <option value="error">錯誤訊息</option>
+        <option value="config">設定檔</option>
+        <option value="bios">BIOS術語</option>
+        <option value="cmd">指令</option>
+        <option value="other">其他</option>
+      </select>
+      <input class="input" id="jn_problem" placeholder="遇到什麼問題/詞彙">
+      <input class="input" id="jn_solution" placeholder="怎麼解決 / 意思是什麼">
+      <input class="input" id="jn_keyword" placeholder="關鍵字 (逗號分隔)">
+      <button class="btn btn-primary btn-full" onclick="saveJournal()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div id="addCmdModal" class="modal-overlay" onclick="closeModalOutside(event,'addCmdModal')">
+  <div class="modal">
+    <div class="modal-title">💾 新增指令 <button class="modal-close" onclick="closeModal('addCmdModal')">✕</button></div>
+    <div class="form-group">
+      <input class="input mono" id="cmd_code" placeholder="指令 (例: df -h)">
+      <input class="input" id="cmd_desc" placeholder="說明">
+      <select class="select" id="cmd_cat">
+        <option value="disk">磁碟管理</option>
+        <option value="service">服務管理</option>
+        <option value="network">網路診斷</option>
+        <option value="perm">權限管理</option>
+        <option value="docker">Docker</option>
+        <option value="custom">自訂</option>
+      </select>
+      <button class="btn btn-primary btn-full" onclick="saveCmd()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================== VOCAB DATA =====================
+const VOCAB_DATA = [
+// LINUX / SERVER (60)
+{id:'l01',en:'permission denied',zh:'沒有執行權限',cat:'linux',lvl:1,cause:'當前使用者對該檔案或目錄沒有讀/寫/執行權限',fix:'sudo <指令> 或 chmod 755 <檔案>',example:'複製設定檔到 /etc 時出現，加 sudo 就解決了',keyword:'sudo,權限,chmod',related:['sudo','chmod','chown']},
+{id:'l02',en:'command not found',zh:'指令不存在或未安裝',cat:'linux',lvl:1,cause:'指令沒有安裝，或執行路徑不在 PATH 裡',fix:'which <指令> 確認路徑，或 sudo apt install <套件>',example:'剛裝好的 Ubuntu 執行 nginx 出現這個',keyword:'安裝,PATH,which',related:['which','apt','PATH']},
+{id:'l03',en:'no such file or directory',zh:'檔案或目錄不存在',cat:'linux',lvl:1,cause:'路徑打錯、檔案被刪除、或目錄尚未建立',fix:'ls 確認目錄內容，pwd 確認當前路徑',example:'cd 進入資料夾打錯路徑時常見',keyword:'路徑,ls,pwd',related:['ls','pwd','mkdir']},
+{id:'l04',en:'connection refused',zh:'連線被拒絕（服務沒開或port錯）',cat:'linux',lvl:1,cause:'目標服務未啟動、防火牆擋住、或port號錯誤',fix:'systemctl status <服務> 確認服務狀態',example:'SSH連不上Server，確認sshd是否啟動',keyword:'服務,port,防火牆',related:['systemctl','ufw','ss']},
+{id:'l05',en:'no space left on device',zh:'磁碟空間已滿',cat:'linux',lvl:1,cause:'磁碟分割區空間用完，無法再寫入任何資料',fix:'df -h 查看哪個分割區滿了，du -sh /* 找大檔',example:'寫log或上傳檔案突然失敗',keyword:'磁碟,df,du',related:['df','du','lsblk']},
+{id:'l06',en:'broken pipe',zh:'管道斷裂（前一個程序意外中止）',cat:'linux',lvl:2,cause:'管道 | 串接的前一個程序已結束，後續程序無法讀取',fix:'確認管道中每個指令都正常，或捕捉 SIGPIPE 訊號',example:'ping | grep 時突然中斷',keyword:'pipe,管道,SIGPIPE',related:['grep','pipe']},
+{id:'l07',en:'segmentation fault',zh:'記憶體區段錯誤（程式崩潰）',cat:'linux',lvl:2,cause:'程式存取了不屬於自己的記憶體位址',fix:'通常是軟體本身的 bug，更新套件版本或回報問題',example:'執行舊版程式或記憶體不足時出現',keyword:'crash,記憶體,bug',related:['dmesg','core dump']},
+{id:'l08',en:'timeout',zh:'連線逾時（對方沒有回應）',cat:'linux',lvl:1,cause:'網路不通、服務太慢沒有回應、或防火牆擋住',fix:'ping 確認網路，或增加逾時等待時間',example:'SSH連線長時間等待後出現',keyword:'網路,ping,等待',related:['ping','ssh','curl']},
+{id:'l09',en:'address already in use',zh:'port號已被其他程式佔用',cat:'linux',lvl:2,cause:'嘗試啟動的服務所需的 port 已被其他程序使用',fix:'ss -tlnp | grep <port> 查誰佔用，再 kill 或換 port',example:'重啟 nginx 時，舊的 process 沒有完全結束',keyword:'port,ss,kill',related:['ss','kill','lsof']},
+{id:'l10',en:'failed to start',zh:'服務啟動失敗',cat:'linux',lvl:1,cause:'設定檔有誤、依賴服務未啟動、或資源不足',fix:'journalctl -xe 看詳細錯誤原因',example:'重改 nginx.conf 後 service 起不來',keyword:'systemctl,journalctl,service',related:['journalctl','systemctl','nginx']},
+{id:'l11',en:'systemctl',zh:'服務控制指令（啟動/停止/重啟）',cat:'linux',lvl:1,cause:'Linux 服務管理工具，管理 systemd 服務',fix:'systemctl start/stop/restart/status <服務>',example:'systemctl restart nginx 重啟網頁服務',keyword:'服務,daemon,start,stop',related:['journalctl','service']},
+{id:'l12',en:'journalctl',zh:'查看系統日誌',cat:'linux',lvl:1,cause:'systemd 的日誌查詢工具',fix:'journalctl -xe 看最新錯誤，-u nginx 看特定服務',example:'服務起不來時第一個查這個',keyword:'log,日誌,錯誤追蹤',related:['systemctl','syslog']},
+{id:'l13',en:'chmod',zh:'修改檔案權限',cat:'linux',lvl:1,cause:'change mode，改變檔案或目錄的讀寫執行權限',fix:'chmod 755 <檔案> 或 chmod +x <script>',example:'chmod 755 deploy.sh 讓 script 可以執行',keyword:'權限,rwx,755,644',related:['chown','permission denied','ls -l']},
+{id:'l14',en:'chown',zh:'修改檔案擁有者',cat:'linux',lvl:1,cause:'change owner，改變檔案或目錄的擁有使用者',fix:'chown user:group <檔案> 或 chown -R user /dir',example:'chown www-data:www-data /var/www/html 讓nginx讀得到',keyword:'owner,擁有者,www-data',related:['chmod','permission denied']},
+{id:'l15',en:'df -h',zh:'查看磁碟使用狀況（人類可讀格式）',cat:'linux',lvl:1,cause:'disk free，顯示所有分割區的使用量',fix:'df -h 直接執行，看 Use% 那欄',example:'報 no space left 後先跑這個看哪個 /dev 滿了',keyword:'磁碟,空間,partition',related:['du','lsblk','no space left']},
+{id:'l16',en:'du -sh',zh:'查看目錄大小',cat:'linux',lvl:1,cause:'disk usage，顯示指定目錄的總大小',fix:'du -sh * 列出每個子目錄大小，找出大檔案',example:'du -sh /var/log/* 看哪個 log 最大',keyword:'目錄大小,log,清理',related:['df','find','rm']},
+{id:'l17',en:'grep',zh:'搜尋文字內容',cat:'linux',lvl:1,cause:'在檔案或輸出中搜尋符合的文字行',fix:'grep "關鍵字" 檔案 或 grep -r "關鍵字" 目錄/',example:'grep -n "error" /var/log/syslog 找 error 行',keyword:'搜尋,文字,filter',related:['cat','tail','awk']},
+{id:'l18',en:'tail -f',zh:'即時監看日誌最新內容',cat:'linux',lvl:1,cause:'持續顯示檔案新增的最後幾行',fix:'tail -f /var/log/syslog 即時監看',example:'tail -f /var/log/nginx/error.log 看nginx報錯',keyword:'log,監看,即時',related:['journalctl','grep','less']},
+{id:'l19',en:'crontab',zh:'排程工作設定',cat:'linux',lvl:2,cause:'Linux 的定時工作排程工具',fix:'crontab -e 編輯，crontab -l 查看',example:'0 2 * * * /backup.sh 每天凌晨2點備份',keyword:'排程,定時,cron',related:['at','systemd timer']},
+{id:'l20',en:'ssh',zh:'遠端安全連線工具',cat:'linux',lvl:1,cause:'Secure Shell，加密的遠端登入協議',fix:'ssh user@ip 連線，-p 指定port，-i 指定私鑰',example:'ssh admin@192.168.1.100 連到遠端Server',keyword:'遠端,連線,金鑰',related:['scp','sftp','putty']},
+{id:'l21',en:'scp',zh:'安全複製檔案到遠端',cat:'linux',lvl:2,cause:'Secure Copy，透過 SSH 傳輸檔案',fix:'scp 本地檔案 user@ip:遠端路徑',example:'scp backup.tar.gz admin@server:/tmp/',keyword:'複製,上傳,下載',related:['ssh','sftp','rsync']},
+{id:'l22',en:'rsync',zh:'同步/備份檔案工具',cat:'linux',lvl:2,cause:'遠端同步工具，只傳輸差異部分，效率高',fix:'rsync -avz 來源/ 目的地/ -e ssh',example:'rsync -avz /data/ backup@nas:/volume1/backup/',keyword:'同步,備份,增量',related:['scp','tar','crontab']},
+{id:'l23',en:'iptables',zh:'防火牆規則設定工具',cat:'linux',lvl:3,cause:'Linux 核心防火牆，設定封包過濾規則',fix:'iptables -L 查看規則，建議用 ufw 代替',example:'查看防火牆規則，排查為何某port連不上',keyword:'防火牆,封包,規則',related:['ufw','nftables','firewalld']},
+{id:'l24',en:'lsblk',zh:'列出所有磁碟裝置',cat:'linux',lvl:1,cause:'List Block devices，顯示所有磁碟和分割區',fix:'lsblk 直接執行，看樹狀結構',example:'新增硬碟後確認裝置名稱（/dev/sdb）',keyword:'磁碟,裝置,partition',related:['fdisk','mkfs','mount']},
+{id:'l25',en:'mount',zh:'掛載磁碟/檔案系統',cat:'linux',lvl:1,cause:'將磁碟分割區或映像檔掛載到目錄',fix:'mount /dev/sdb1 /mnt/data 或 mount -a 掛載全部',example:'新硬碟格式化後 mount 到 /data 才能用',keyword:'掛載,fstab,filesystem',related:['umount','fstab','lsblk']},
+{id:'l26',en:'umount',zh:'卸載磁碟',cat:'linux',lvl:1,cause:'取消磁碟或檔案系統的掛載',fix:'umount /mnt/data 或 umount /dev/sdb1',example:'拔除USB前先執行 umount 避免資料損壞',keyword:'卸載,安全移除',related:['mount','sync']},
+{id:'l27',en:'fdisk',zh:'磁碟分割工具',cat:'linux',lvl:2,cause:'管理磁碟分割表的互動式工具',fix:'fdisk /dev/sdb 進入互動模式，n新增 d刪除 w存檔',example:'新增硬碟後用 fdisk 建立分割區',keyword:'分割,partition,MBR',related:['gdisk','parted','mkfs']},
+{id:'l28',en:'mkfs',zh:'格式化磁碟（建立檔案系統）',cat:'linux',lvl:2,cause:'make filesystem，建立指定格式的檔案系統',fix:'mkfs.ext4 /dev/sdb1 或 mkfs.xfs /dev/sdb1',example:'新分割區建好後格式化成 ext4',keyword:'格式化,ext4,filesystem',related:['fdisk','mount','fsck']},
+{id:'l29',en:'ps aux',zh:'顯示所有執行中的程序',cat:'linux',lvl:1,cause:'process status，列出所有使用者的程序',fix:'ps aux | grep nginx 過濾特定程序',example:'確認 nginx 有沒有在跑',keyword:'process,程序,PID',related:['top','htop','kill']},
+{id:'l30',en:'kill',zh:'終止程序',cat:'linux',lvl:1,cause:'發送訊號給指定 PID 的程序',fix:'kill PID 或 kill -9 PID（強制終止）',example:'kill -9 1234 強制殺掉卡死的程序',keyword:'終止,PID,強制',related:['ps','pkill','killall']},
+{id:'l31',en:'top',zh:'即時系統資源監看',cat:'linux',lvl:1,cause:'顯示 CPU、記憶體、程序使用情況',fix:'top 直接執行，q離開，k殺程序，按1看每個CPU',example:'Server 很慢時先跑 top 看誰吃資源',keyword:'CPU,記憶體,效能',related:['htop','ps','vmstat']},
+{id:'l32',en:'htop',zh:'進階系統監看工具（top的升級版）',cat:'linux',lvl:1,cause:'比 top 更直觀，支援彩色顯示和滑鼠操作',fix:'sudo apt install htop 後直接執行',example:'比 top 更好用，可以直接點擊排序',keyword:'監看,效能,資源',related:['top','ps','glances']},
+{id:'l33',en:'netstat',zh:'查看網路連線狀態',cat:'linux',lvl:2,cause:'顯示網路連線、監聽 port、路由表',fix:'netstat -tlnp 看監聽的 port',example:'確認 nginx 是否監聽 80 port',keyword:'port,連線,監聽',related:['ss','lsof','nmap']},
+{id:'l34',en:'ss',zh:'查看 socket 連線（netstat的替代品）',cat:'linux',lvl:1,cause:'Socket Statistics，比 netstat 更快更現代',fix:'ss -tlnp 看監聽port，ss -s 看統計',example:'ss -tlnp | grep 80 確認 80 port 誰在用',keyword:'port,socket,監聽',related:['netstat','lsof']},
+{id:'l35',en:'curl',zh:'命令列HTTP請求工具',cat:'linux',lvl:1,cause:'發送 HTTP/HTTPS 請求，測試 API 或下載檔案',fix:'curl -I http://localhost 看 HTTP 回應標頭',example:'curl -o install.sh https://example.com/script.sh 下載腳本',keyword:'HTTP,API,下載,測試',related:['wget','ping','nc']},
+{id:'l36',en:'wget',zh:'下載檔案工具',cat:'linux',lvl:1,cause:'從網路下載檔案到本地',fix:'wget URL 下載，-O 指定檔名，-c 斷點續傳',example:'wget https://example.com/file.iso 下載ISO',keyword:'下載,HTTP,檔案',related:['curl','scp']},
+{id:'l37',en:'tar',zh:'壓縮/解壓縮工具',cat:'linux',lvl:1,cause:'打包或解包 tar 格式的壓縮檔',fix:'tar -czf backup.tar.gz /data/ 壓縮，tar -xzf 解壓',example:'tar -czf backup.tar.gz /etc/ 備份設定檔',keyword:'壓縮,打包,備份',related:['gzip','zip','rsync']},
+{id:'l38',en:'ln -s',zh:'建立符號連結（捷徑）',cat:'linux',lvl:2,cause:'建立軟連結，讓多個路徑指向同一個檔案',fix:'ln -s 目標路徑 連結名稱',example:'ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/',keyword:'連結,symlink,捷徑',related:['ls -l','readlink']},
+{id:'l39',en:'sudo',zh:'以管理員權限執行指令',cat:'linux',lvl:1,cause:'superuser do，以 root 或其他使用者身份執行',fix:'在指令前加 sudo，或 sudo su 切換到 root',example:'sudo apt update 更新套件庫',keyword:'root,管理員,權限',related:['su','permission denied','visudo']},
+{id:'l40',en:'apt',zh:'套件管理工具（Ubuntu/Debian）',cat:'linux',lvl:1,cause:'Advanced Package Tool，安裝/更新/移除套件',fix:'sudo apt update && sudo apt install <套件>',example:'sudo apt install nginx 安裝網頁伺服器',keyword:'安裝,套件,更新',related:['apt-get','dpkg','snap']},
+{id:'l41',en:'systemd',zh:'Linux 系統和服務管理框架',cat:'linux',lvl:2,cause:'現代 Linux 的 init 系統，管理開機程序和服務',fix:'透過 systemctl 指令操作',example:'systemd 管理所有服務的啟動順序',keyword:'init,服務,daemon',related:['systemctl','journalctl','service']},
+{id:'l42',en:'cgroup',zh:'控制群組（資源限制）',cat:'linux',lvl:3,cause:'Linux 核心功能，限制程序可用的 CPU、記憶體',fix:'Docker 和 Kubernetes 背後都用 cgroup',example:'設定容器最多只能用 2GB 記憶體',keyword:'資源限制,容器,Docker',related:['Docker','namespace','systemd']},
+{id:'l43',en:'namespace',zh:'命名空間（隔離機制）',cat:'linux',lvl:3,cause:'Linux 核心的程序隔離技術，容器的基礎',fix:'Docker 容器的網路、PID、檔案系統隔離靠這個',example:'每個 Docker 容器有自己的網路 namespace',keyword:'隔離,容器,Docker',related:['cgroup','Docker','chroot']},
+{id:'l44',en:'nohup',zh:'讓程序在背景持續執行',cat:'linux',lvl:2,cause:'no hangup，關掉終端機後程序繼續跑',fix:'nohup ./script.sh & 背景執行，輸出到 nohup.out',example:'nohup python app.py & 部署後離線也繼續跑',keyword:'背景,daemon,持續執行',related:['screen','tmux','&']},
+{id:'l45',en:'screen',zh:'終端機多工/持久化工具',cat:'linux',lvl:2,cause:'可以在 SSH 斷線後繼續執行的終端機工具',fix:'screen 新建，Ctrl+A D 離開，screen -r 回來',example:'長時間安裝或跑腳本時用，不怕斷線',keyword:'斷線,持久,多工',related:['tmux','nohup','ssh']},
+{id:'l46',en:'env',zh:'查看或設定環境變數',cat:'linux',lvl:2,cause:'顯示所有環境變數，或在指定環境下執行程序',fix:'env 查看，export VAR=值 設定，env -i 清空執行',example:'env | grep PATH 看 PATH 設定了什麼',keyword:'環境變數,PATH,export',related:['export','source','.bashrc']},
+{id:'l47',en:'alias',zh:'指令別名（縮短常用指令）',cat:'linux',lvl:1,cause:'為常用的長指令設定簡短的別名',fix:'alias ll="ls -la" 設定，加到 ~/.bashrc 永久保存',example:'alias dps="docker ps --format table" 縮短 docker 指令',keyword:'別名,效率,bashrc',related:['bashrc','zshrc','function']},
+{id:'l48',en:'source',zh:'在當前 shell 執行腳本（不開子程序）',cat:'linux',lvl:2,cause:'讓腳本中的變數設定在當前 shell 生效',fix:'source ~/.bashrc 或 . ~/.bashrc',example:'改完 ~/.bashrc 後執行 source ~/.bashrc 生效',keyword:'bashrc,環境變數,生效',related:['bash','export','env']},
+{id:'l49',en:'which',zh:'查詢指令的完整路徑',cat:'linux',lvl:1,cause:'顯示指令的執行檔位置',fix:'which nginx 查看 nginx 在哪',example:'command not found 時先跑 which 確認是否安裝',keyword:'路徑,PATH,安裝',related:['whereis','type','PATH']},
+{id:'l50',en:'find',zh:'搜尋檔案或目錄',cat:'linux',lvl:1,cause:'在指定路徑下搜尋符合條件的檔案',fix:'find /var -name "*.log" -mtime +7 找7天前的log',example:'find / -size +500M 找大於500MB的檔案',keyword:'搜尋,檔案,條件',related:['grep','ls','locate']},
+{id:'l51',en:'vi / vim',zh:'終端機文字編輯器',cat:'linux',lvl:1,cause:'Linux 最常見的文字編輯器，無 GUI 環境必備',fix:':w 存檔，:q 離開，:wq 存檔並離開，i 進入插入模式',example:'vim /etc/nginx/nginx.conf 編輯設定檔',keyword:'編輯,設定檔,文字',related:['nano','gedit']},
+{id:'l52',en:'nano',zh:'簡單易用的終端機文字編輯器',cat:'linux',lvl:1,cause:'比 vim 更直觀的文字編輯器，新手友善',fix:'Ctrl+O 存檔，Ctrl+X 離開',example:'sudo nano /etc/ssh/sshd_config 編輯SSH設定',keyword:'編輯,簡單,設定檔',related:['vim','vi']},
+{id:'l53',en:'cat',zh:'顯示檔案內容',cat:'linux',lvl:1,cause:'concatenate，顯示檔案內容或合併檔案',fix:'cat 檔案 顯示內容，cat file1 file2 > merged 合併',example:'cat /etc/passwd 看使用者清單',keyword:'查看,顯示,內容',related:['less','more','head','tail']},
+{id:'l54',en:'less',zh:'分頁顯示大檔案',cat:'linux',lvl:1,cause:'比 cat 更好用，可上下滾動，適合大檔案',fix:'less 檔案，空白鍵翻頁，q離開，/搜尋',example:'less /var/log/syslog 查看大型日誌',keyword:'查看,分頁,日誌',related:['cat','more','tail']},
+{id:'l55',en:'echo',zh:'顯示文字或變數值',cat:'linux',lvl:1,cause:'在終端機輸出文字，常用於腳本和測試',fix:'echo "text" 顯示，echo $VAR 顯示變數',example:'echo $PATH 看 PATH 變數，echo "OK" >> file 附加文字',keyword:'輸出,變數,腳本',related:['printf','cat','env']},
+{id:'l56',en:'| (pipe)',zh:'管道（串接兩個指令）',cat:'linux',lvl:1,cause:'把前一個指令的輸出，傳給後一個指令作為輸入',fix:'指令1 | 指令2 | 指令3',example:"ps aux | grep nginx | awk '{print $2}'",keyword:'管道,串接,filter',related:['grep','awk','sort']},
+{id:'l57',en:'> / >> (重新導向)',zh:'輸出重新導向（覆蓋/附加）',cat:'linux',lvl:1,cause:'把指令輸出寫到檔案，> 覆蓋，>> 附加',fix:'指令 > file 覆蓋，指令 >> file 附加',example:'echo "done" >> /var/log/backup.log 記錄備份完成',keyword:'重導向,覆蓋,附加',related:['echo','cat','tee']},
+{id:'l58',en:'reboot',zh:'重新啟動系統',cat:'linux',lvl:1,cause:'重啟 Linux 系統',fix:'sudo reboot 或 sudo shutdown -r now',example:'更新 kernel 後需要 reboot 才生效',keyword:'重啟,重開機',related:['shutdown','poweroff','init 6']},
+{id:'l59',en:'shutdown',zh:'關機或排程關機',cat:'linux',lvl:1,cause:'安全關閉系統',fix:'sudo shutdown -h now 立即關機，-r 重啟',example:'sudo shutdown -h +10 十分鐘後關機',keyword:'關機,安全,排程',related:['reboot','poweroff','halt']},
+{id:'l60',en:'history',zh:'查看執行過的指令記錄',cat:'linux',lvl:1,cause:'顯示當前使用者的指令歷史',fix:'history 查看，!! 重複上一個，!n 執行第n筆',example:'history | grep nginx 找之前執行過的 nginx 指令',keyword:'歷史,記錄,查詢',related:['bash','zsh','ctrl+r']},
+
+// NETWORK / SECURITY (60)
+{id:'n01',en:'ping',zh:'測試網路連通性',cat:'network',lvl:1,cause:'發送 ICMP 封包測試目標主機是否可達',fix:'ping 192.168.1.1 測試，-c 4 只跑4個封包',example:'ping 8.8.8.8 確認能否連到 Google DNS',keyword:'ICMP,連通,測試',related:['traceroute','curl','mtr']},
+{id:'n02',en:'firewall',zh:'防火牆',cat:'network',lvl:1,cause:'控制網路封包進出的安全機制',fix:'Linux 常用 ufw，Windows 有內建防火牆',example:'防火牆擋住 80 port 導致網頁打不開',keyword:'安全,封包,規則',related:['ufw','iptables','port']},
+{id:'n03',en:'ufw',zh:'Ubuntu 防火牆管理工具',cat:'network',lvl:1,cause:'Uncomplicated Firewall，簡化 iptables 操作',fix:'ufw allow 80/tcp 開放，ufw deny 22 封鎖，ufw status',example:'ufw allow 443/tcp 開放 HTTPS',keyword:'防火牆,ubuntu,規則',related:['iptables','firewall','port']},
+{id:'n04',en:'port',zh:'通訊埠（服務的門牌號碼）',cat:'network',lvl:1,cause:'區分同一台主機上不同服務的數字編號',fix:'常見：22=SSH，80=HTTP，443=HTTPS，3306=MySQL',example:'nginx 預設 port 80，改到 8080 要記得開防火牆',keyword:'服務,通訊,門號',related:['ufw','ss','netstat']},
+{id:'n05',en:'SSL / TLS',zh:'網路加密協議（HTTPS 的基礎）',cat:'network',lvl:2,cause:'Secure Sockets Layer / Transport Layer Security，加密網路傳輸',fix:'用 Lets Encrypt 免費申請 SSL 憑證',example:'網頁瀏覽器鎖頭圖示代表有 SSL',keyword:'加密,HTTPS,憑證',related:['HTTPS','certificate','certbot']},
+{id:'n06',en:'certificate',zh:'數位憑證（SSL/TLS 用）',cat:'network',lvl:2,cause:'證明伺服器身份的數位文件，包含公鑰',fix:'openssl 可以查看憑證內容，certbot 申請免費憑證',example:'憑證過期會造成瀏覽器顯示「不安全」警告',keyword:'憑證,SSL,加密,過期',related:['SSL','certbot','openssl']},
+{id:'n07',en:'SSH',zh:'安全遠端連線協議（port 22）',cat:'network',lvl:1,cause:'Secure Shell，加密的遠端登入通道',fix:'ssh user@ip，金鑰登入比密碼更安全',example:'IT 人員透過 SSH 遠端管理 Server',keyword:'遠端,連線,安全,22',related:['scp','sftp','putty']},
+{id:'n08',en:'DNS',zh:'網域名稱系統（網址轉IP）',cat:'network',lvl:1,cause:'Domain Name System，把域名解析成 IP 位址',fix:'nslookup 或 dig 查詢 DNS 記錄',example:'DNS 解析失敗導致網頁打不開但 ping IP 通',keyword:'域名,解析,IP,A記錄',related:['nslookup','dig','hosts file']},
+{id:'n09',en:'DHCP',zh:'自動分配 IP 位址的協議',cat:'network',lvl:1,cause:'Dynamic Host Configuration Protocol，自動設定 IP、閘道、DNS',fix:'dhclient 更新 IP，或設定靜態 IP',example:'辦公室電腦開機自動取得 IP 就是靠 DHCP',keyword:'IP,自動,分配',related:['IP','static IP','network']},
+{id:'n10',en:'VLAN',zh:'虛擬區域網路',cat:'network',lvl:2,cause:'在同一個實體網路上建立多個邏輯隔離的網段',fix:'在 Switch 設定，不同 VLAN 的設備需透過路由器溝通',example:'公司把 IT 設備和一般員工電腦放不同 VLAN',keyword:'隔離,分段,交換器',related:['switch','router','subnet']},
+{id:'n11',en:'subnet',zh:'子網路（IP 位址範圍）',cat:'network',lvl:2,cause:'把一個網路切割成較小的區域',fix:'常見 /24 = 255.255.255.0 = 254 台主機',example:'192.168.1.0/24 代表 192.168.1.1~254',keyword:'遮罩,網段,IP範圍',related:['VLAN','IP','CIDR']},
+{id:'n12',en:'gateway',zh:'閘道（預設路由出口）',cat:'network',lvl:1,cause:'連接不同網路的路由設備 IP 位址',fix:'ip route 查看，通常是 192.168.1.1 或 .254',example:'gateway 設錯會導致連不到外網',keyword:'路由,出口,路由器',related:['route','IP','DNS']},
+{id:'n13',en:'traceroute',zh:'追蹤封包路由路徑',cat:'network',lvl:2,cause:'顯示封包從來源到目的地的每一跳路由',fix:'traceroute 8.8.8.8 或 tracert（Windows）',example:'網路很慢時用來找卡在哪個節點',keyword:'路由,延遲,診斷',related:['ping','mtr','route']},
+{id:'n14',en:'nmap',zh:'網路掃描工具',cat:'network',lvl:2,cause:'掃描主機開啟的 port 和服務',fix:'nmap -sV 192.168.1.1 掃描並偵測版本',example:'nmap 192.168.1.0/24 掃整個網段',keyword:'掃描,port,安全稽核',related:['ss','netstat','masscan']},
+{id:'n15',en:'VPN',zh:'虛擬私人網路',cat:'network',lvl:1,cause:'透過加密隧道連接到遠端網路',fix:'常見：OpenVPN、WireGuard、Cisco AnyConnect',example:'員工遠端工作透過 VPN 連回公司網路',keyword:'加密,隧道,遠端',related:['tunnel','OpenVPN','WireGuard']},
+{id:'n16',en:'proxy',zh:'代理伺服器',cat:'network',lvl:2,cause:'代替客戶端發送請求的中間伺服器',fix:'正向代理：用戶設定；反向代理：nginx/HAProxy',example:'公司用 proxy 過濾員工上網流量',keyword:'代理,中間,轉發',related:['reverse proxy','nginx','load balancer']},
+{id:'n17',en:'reverse proxy',zh:'反向代理',cat:'network',lvl:2,cause:'代替後端伺服器接收請求，再轉發給後端',fix:'nginx 最常用：location / proxy_pass http://backend',example:'nginx 當反向代理保護後端 app server',keyword:'nginx,後端,轉發',related:['proxy','nginx','load balancer']},
+{id:'n18',en:'load balancer',zh:'負載均衡器',cat:'network',lvl:2,cause:'把流量分散到多台伺服器，避免單點過載',fix:'nginx upstream、HAProxy、AWS ELB',example:'高流量電商網站用 LB 分流到多台 web server',keyword:'分流,HA,高可用',related:['nginx','HAProxy','HA']},
+{id:'n19',en:'HTTP',zh:'超文本傳輸協定（網頁通訊）',cat:'network',lvl:1,cause:'HyperText Transfer Protocol，瀏覽器和伺服器溝通的協議',fix:'HTTP 狀態碼：200=成功 404=找不到 500=伺服器錯誤',example:'瀏覽器開網頁就是發 HTTP GET 請求',keyword:'網頁,請求,回應',related:['HTTPS','REST API','nginx']},
+{id:'n20',en:'HTTPS',zh:'加密的 HTTP 協議（port 443）',cat:'network',lvl:1,cause:'HTTP + SSL/TLS 加密，保護傳輸中的資料',fix:'需要 SSL 憑證，nginx 設定 ssl_certificate',example:'現代網站都應該用 HTTPS，瀏覽器會顯示鎖頭',keyword:'加密,SSL,443',related:['HTTP','SSL','certificate']},
+{id:'n21',en:'TCP',zh:'傳輸控制協議（可靠傳輸）',cat:'network',lvl:2,cause:'Transmission Control Protocol，確保封包完整到達',fix:'大多數應用服務用 TCP（SSH、HTTP、HTTPS）',example:'SSH 和 HTTP 都是 TCP-based 協議',keyword:'可靠,連線,三次握手',related:['UDP','IP','socket']},
+{id:'n22',en:'UDP',zh:'用戶資料報協議（快速但不保證到達）',cat:'network',lvl:2,cause:'User Datagram Protocol，不保證封包到達，但速度快',fix:'DNS、影音串流、遊戲常用 UDP',example:'DNS 查詢用 UDP，因此速度快',keyword:'快速,無連線,DNS',related:['TCP','DNS','RTP']},
+{id:'n23',en:'MAC address',zh:'網路卡實體位址',cat:'network',lvl:1,cause:'Media Access Control，網路卡的唯一硬體識別碼',fix:'ip link show 或 ifconfig 查看',example:'DHCP 保留 IP 需要填 MAC address',keyword:'硬體,實體,唯一',related:['IP','DHCP','ARP']},
+{id:'n24',en:'ARP',zh:'IP 和 MAC 位址對應協議',cat:'network',lvl:2,cause:'Address Resolution Protocol，查詢 IP 對應的 MAC',fix:'arp -a 查看對應表',example:'ARP 毒化攻擊可以截攔網路流量',keyword:'MAC,IP,對應',related:['MAC address','IP','switch']},
+{id:'n25',en:'NAT',zh:'網路位址轉換',cat:'network',lvl:2,cause:'Network Address Translation，讓多台設備共用一個外部 IP',fix:'路由器通常做 NAT，VMware VM 預設也是 NAT 模式',example:'家裡多台電腦共用一個外網 IP 靠 NAT',keyword:'共用IP,路由,私有IP',related:['IP','router','VMware']},
+{id:'n26',en:'bandwidth',zh:'頻寬（網路最大傳輸速度）',cat:'network',lvl:1,cause:'網路連線的最大資料傳輸能力',fix:'iperf3 測量兩點間的實際頻寬',example:'100Mbps 頻寬大約每秒可傳 12.5MB 資料',keyword:'速度,Mbps,傳輸',related:['latency','throughput','iperf']},
+{id:'n27',en:'latency',zh:'延遲（封包來回時間）',cat:'network',lvl:1,cause:'封包從發送到收到回應的時間',fix:'ping 測量 RTT（Round Trip Time）',example:'ping 8.8.8.8 看 ms 值就是延遲',keyword:'延遲,RTT,ping,ms',related:['ping','bandwidth','traceroute']},
+{id:'n28',en:'packet loss',zh:'封包遺失',cat:'network',lvl:2,cause:'傳送的網路封包沒有到達目的地',fix:'ping -c 100 長時間 ping 看遺失率，檢查網路線或 switch',example:'ping 結果 10% packet loss 代表網路不穩',keyword:'遺失,網路不穩,品質',related:['ping','QoS','network']},
+{id:'n29',en:'router',zh:'路由器',cat:'network',lvl:1,cause:'連接不同網路並決定封包路由的設備',fix:'ip route 查看路由表',example:'辦公室網路的核心設備，控制進出流量',keyword:'路由,轉發,網段',related:['switch','gateway','NAT']},
+{id:'n30',en:'switch',zh:'網路交換器',cat:'network',lvl:1,cause:'在同一網段內根據 MAC 位址轉發封包的設備',fix:'Layer 2 只看 MAC，Layer 3 也看 IP',example:'辦公室每個桌子插網路線連到 switch',keyword:'MAC,LAN,連接',related:['router','VLAN','hub']},
+{id:'n31',en:'brute force',zh:'暴力破解攻擊',cat:'network',lvl:2,cause:'嘗試所有可能的密碼組合來猜測登入憑證',fix:'設強密碼、啟用金鑰登入、使用 fail2ban',example:'SSH 被 brute force 攻擊，日誌充滿失敗登入記錄',keyword:'攻擊,密碼,暴力,fail2ban',related:['fail2ban','SSH','authentication']},
+{id:'n32',en:'fail2ban',zh:'自動封鎖惡意 IP 的工具',cat:'network',lvl:2,cause:'監看登入失敗記錄，超過次數就封鎖來源 IP',fix:'sudo apt install fail2ban，設定 /etc/fail2ban/jail.conf',example:'SSH 暴力破解防護必裝',keyword:'安全,SSH防護,封鎖',related:['SSH','brute force','ufw']},
+{id:'n33',en:'SSL certificate expired',zh:'SSL 憑證已過期',cat:'network',lvl:2,cause:'SSL 憑證到期時間已過，瀏覽器顯示安全警告',fix:'certbot renew 更新 Lets Encrypt 憑證',example:'網站突然顯示「您的連線不是私人連線」',keyword:'憑證過期,SSL,HTTPS',related:['SSL','certificate','certbot']},
+{id:'n34',en:'authentication failed',zh:'身份驗證失敗',cat:'network',lvl:1,cause:'提供的憑證（密碼/金鑰）不正確',fix:'確認帳號密碼，或檢查 SSH 金鑰設定',example:'SSH 連線顯示 Authentication failed 代表密碼輸入錯',keyword:'登入失敗,密碼,認證',related:['SSH','password','authorized_keys']},
+{id:'n35',en:'network unreachable',zh:'網路無法到達',cat:'network',lvl:1,cause:'沒有到達目標 IP 的路由，通常是路由設定問題',fix:'ip route 查路由表，確認 gateway 設定正確',example:'設定靜態 IP 忘了設 gateway 就會出現',keyword:'路由,gateway,連線',related:['route','gateway','ping']},
+{id:'n36',en:'host is down',zh:'目標主機已關機或無法到達',cat:'network',lvl:1,cause:'目標主機未開機、已離線、或網路中斷',fix:'確認主機電源，或確認網路路徑',example:'ping 後顯示 Host is down',keyword:'關機,離線,可用性',related:['ping','ICMP','network']},
+{id:'n37',en:'bandwidth throttling',zh:'頻寬限制',cat:'network',lvl:2,cause:'主動限制某條線路或使用者的傳輸速度',fix:'tc 指令設定，或在路由器/防火牆設定',example:'QoS 設定讓視訊會議優先，其他限速',keyword:'QoS,限速,優先',related:['QoS','bandwidth','tc']},
+{id:'n38',en:'packet capture',zh:'封包擷取/分析',cat:'network',lvl:3,cause:'擷取網路中傳輸的封包進行分析',fix:'tcpdump 指令列，Wireshark 圖形介面',example:'tcpdump -i eth0 port 80 擷取 HTTP 流量',keyword:'分析,Wireshark,tcpdump',related:['tcpdump','Wireshark']},
+{id:'n39',en:'tcpdump',zh:'命令列封包擷取工具',cat:'network',lvl:3,cause:'Linux 封包擷取分析工具，診斷網路問題',fix:'tcpdump -i eth0 host 192.168.1.1',example:'懷疑封包被防火牆擋住時用來驗證',keyword:'封包,診斷,分析',related:['Wireshark','packet capture']},
+{id:'n40',en:'ifconfig',zh:'查看和設定網路介面（舊版）',cat:'network',lvl:1,cause:'顯示網路介面的 IP、MAC、狀態',fix:'現代 Linux 建議用 ip addr 取代',example:'ifconfig eth0 或 ip addr show',keyword:'網路介面,IP,MAC',related:['ip addr','ipconfig','nmcli']},
+{id:'n41',en:'ip addr',zh:'查看和管理 IP 位址（新版）',cat:'network',lvl:1,cause:'ip 工具組的子指令，查看網路介面',fix:'ip addr show 查看，ip addr add IP/24 dev eth0 設定',example:'ip addr show eth0 查看特定介面設定',keyword:'IP,網路介面,現代',related:['ifconfig','ip route','nmcli']},
+{id:'n42',en:'nmcli',zh:'NetworkManager 命令列管理工具',cat:'network',lvl:2,cause:'管理 NetworkManager 的連線和網路介面',fix:'nmcli con show 查看，nmcli dev status 裝置狀態',example:'nmcli con mod 介面名 ipv4.addresses IP/24 設定靜態IP',keyword:'NetworkManager,靜態IP,設定',related:['ip addr','nmtui','network']},
+{id:'n43',en:'hosts file',zh:'本機 DNS 對應表',cat:'network',lvl:1,cause:'在 DNS 查詢前先查本機的對應關係',fix:'Linux: /etc/hosts，Windows: C:\\Windows\\System32\\drivers\\etc\\hosts',example:'測試時把 domain 對應到本機 IP',keyword:'DNS,本機,對應',related:['DNS','resolv.conf','nslookup']},
+{id:'n44',en:'nslookup',zh:'DNS 查詢工具',cat:'network',lvl:1,cause:'查詢 DNS 記錄，診斷 DNS 問題',fix:'nslookup google.com 查A記錄，nslookup -type=MX 查郵件',example:'網站打不開時先 nslookup 確認 DNS 正常',keyword:'DNS,查詢,解析',related:['dig','DNS','host']},
+{id:'n45',en:'dig',zh:'進階 DNS 查詢工具',cat:'network',lvl:2,cause:'Domain Information Groper，比 nslookup 更詳細',fix:'dig google.com，dig +trace 追蹤完整解析路徑',example:'dig @8.8.8.8 example.com 指定DNS伺服器查詢',keyword:'DNS,詳細,查詢',related:['nslookup','DNS','whois']},
+{id:'n46',en:'MTU',zh:'最大傳輸單元',cat:'network',lvl:3,cause:'Maximum Transmission Unit，網路封包的最大位元組數',fix:'預設 1500 bytes，VPN 環境可能需要降低到 1400',example:'VPN 封包太大造成碎裂，降低 MTU 解決',keyword:'封包大小,VPN,碎裂',related:['VPN','TCP','packet']},
+{id:'n47',en:'ICMP',zh:'Internet 控制訊息協議',cat:'network',lvl:2,cause:'網路診斷用的協議，ping 就是使用 ICMP',fix:'防火牆可以封鎖 ICMP，造成 ping 不通但服務正常',example:'ping 用的就是 ICMP echo request/reply',keyword:'ping,診斷,封包',related:['ping','traceroute','firewall']},
+{id:'n48',en:'routing table',zh:'路由表',cat:'network',lvl:2,cause:'記錄封包應該從哪個介面發送的表格',fix:'ip route 或 route -n 查看',example:'ip route add 10.0.0.0/8 via 192.168.1.1 新增路由',keyword:'路由,轉發,閘道',related:['gateway','ip route','router']},
+{id:'n49',en:'NFS',zh:'網路檔案系統',cat:'network',lvl:2,cause:'Network File System，透過網路掛載遠端檔案系統',fix:'showmount -e <server> 查看分享，mount -t nfs server:/share /mnt',example:'把 NAS 上的目錄 mount 到 Linux Server 使用',keyword:'共享,遠端,NAS,掛載',related:['Samba','SMB','mount']},
+{id:'n50',en:'Samba / SMB',zh:'Windows 網路共享協議',cat:'network',lvl:2,cause:'讓 Linux 和 Windows 之間共享檔案和印表機',fix:'sudo apt install samba，設定 /etc/samba/smb.conf',example:'辦公室 Linux Server 分享資料夾給 Windows 電腦',keyword:'共享,Windows,Linux,檔案',related:['NFS','CIFS','mount']},
+{id:'n51',en:'WAF',zh:'網頁應用程式防火牆',cat:'network',lvl:3,cause:'Web Application Firewall，保護 Web 應用免受攻擊',fix:'常見：ModSecurity、AWS WAF、Cloudflare WAF',example:'過濾 SQL injection 和 XSS 攻擊',keyword:'資安,HTTP,攻擊防護',related:['firewall','nginx','SQL injection']},
+{id:'n52',en:'SQL injection',zh:'SQL 注入攻擊',cat:'network',lvl:2,cause:'在輸入欄位插入惡意 SQL 語句，竊取或破壞資料庫',fix:'使用 prepared statement，驗證所有輸入',example:"登入頁輸入 admin'--  繞過密碼驗證",keyword:'攻擊,資安,資料庫',related:['WAF','XSS','prepared statement']},
+{id:'n53',en:'XSS',zh:'跨站腳本攻擊',cat:'network',lvl:2,cause:'Cross-Site Scripting，在網頁植入惡意腳本',fix:'輸出時做 HTML 跳脫，設定 CSP 標頭',example:'在留言板輸入 <script>alert(1)</script>',keyword:'攻擊,JavaScript,網頁',related:['WAF','SQL injection','CSP']},
+{id:'n54',en:'DDoS',zh:'分散式阻斷服務攻擊',cat:'network',lvl:2,cause:'用大量流量癱瘓目標服務',fix:'CDN 防護（Cloudflare）、rate limiting、WAF',example:'大量請求打爆 nginx，服務無法回應',keyword:'攻擊,流量,防護',related:['WAF','rate limit','Cloudflare']},
+{id:'n55',en:'2FA / MFA',zh:'雙重/多重身份驗證',cat:'network',lvl:1,cause:'Two/Multi-Factor Authentication，除密碼外還需第二種驗證',fix:'常用：TOTP（Google Authenticator）、SMS OTP',example:'登入 Server 除密碼還要輸入手機驗證碼',keyword:'安全,OTP,認證',related:['authentication','SSH','TOTP']},
+{id:'n56',en:'encryption',zh:'加密',cat:'network',lvl:1,cause:'把資料轉換為只有授權方才能讀取的格式',fix:'傳輸加密用 TLS，儲存加密用 AES',example:'HTTPS 傳輸加密保護密碼不被竊聽',keyword:'安全,保護,密文',related:['SSL','TLS','AES']},
+{id:'n57',en:'public key / private key',zh:'公鑰 / 私鑰',cat:'network',lvl:2,cause:'非對稱加密的一對金鑰，公鑰加密私鑰解密',fix:'ssh-keygen 產生金鑰對，公鑰放到 authorized_keys',example:'SSH 金鑰登入比密碼更安全',keyword:'金鑰,非對稱,SSH',related:['SSH','RSA','authorized_keys']},
+{id:'n58',en:'authorized_keys',zh:'SSH 允許連線的公鑰清單',cat:'network',lvl:2,cause:'存放允許金鑰登入的公鑰',fix:'cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys',example:'把自己的公鑰加到伺服器才能免密碼登入',keyword:'SSH,金鑰,登入',related:['public key','SSH','sshd_config']},
+{id:'n59',en:'sshd_config',zh:'SSH 伺服器設定檔',cat:'network',lvl:2,cause:'SSH daemon 的主設定檔，控制連線規則',fix:'/etc/ssh/sshd_config，改完要 systemctl restart sshd',example:'禁止 root 登入：PermitRootLogin no',keyword:'SSH設定,安全,port',related:['SSH','authorized_keys','fail2ban']},
+{id:'n60',en:'TLS handshake failed',zh:'TLS 握手失敗',cat:'network',lvl:2,cause:'建立加密連線時協商失敗，可能是版本不相容或憑證問題',fix:'openssl s_client -connect host:443 診斷',example:'curl 連 HTTPS 出現 SSL handshake failure',keyword:'TLS,SSL,憑證',related:['SSL','certificate','openssl']},
+
+// DOCKER (50)
+{id:'d01',en:'docker ps',zh:'列出執行中的容器',cat:'docker',lvl:1,cause:'process status for docker，顯示容器清單',fix:'docker ps 只看執行中，docker ps -a 含已停止',example:'docker ps 確認 nginx 容器是否在跑',keyword:'容器,清單,狀態',related:['docker start','docker stop','docker logs']},
+{id:'d02',en:'docker pull',zh:'下載容器映像檔',cat:'docker',lvl:1,cause:'從 Docker Hub 下載指定的 image',fix:'docker pull nginx:latest 或 docker pull ubuntu:22.04',example:'docker pull mysql:8.0 下載 MySQL 映像',keyword:'映像,下載,registry',related:['docker images','docker run']},
+{id:'d03',en:'docker run',zh:'建立並執行容器',cat:'docker',lvl:1,cause:'從 image 建立新容器並啟動',fix:'docker run -d -p 80:80 --name myapp nginx',example:'docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pass mysql',keyword:'容器,啟動,建立',related:['docker start','docker stop','docker ps']},
+{id:'d04',en:'docker exec',zh:'在執行中的容器內執行指令',cat:'docker',lvl:1,cause:'進入容器或在容器內執行單一指令',fix:'docker exec -it 容器名 bash 進入互動模式',example:'docker exec -it mysql bash 進入 MySQL 容器',keyword:'進入容器,指令,互動',related:['docker run','docker attach']},
+{id:'d05',en:'docker logs',zh:'查看容器的日誌輸出',cat:'docker',lvl:1,cause:'顯示容器的 stdout/stderr 輸出',fix:'docker logs 容器名，-f 即時跟蹤，--tail 100 看最後100行',example:'docker logs -f app 即時監看應用程式輸出',keyword:'日誌,log,除錯',related:['docker exec','journalctl']},
+{id:'d06',en:'docker stop / start',zh:'停止 / 啟動容器',cat:'docker',lvl:1,cause:'停止執行中的容器，或重新啟動已停止的容器',fix:'docker stop 容器名，docker start 容器名',example:'docker stop nginx 停止，docker start nginx 重啟',keyword:'停止,啟動,控制',related:['docker restart','docker rm','docker ps']},
+{id:'d07',en:'docker rm',zh:'刪除容器',cat:'docker',lvl:1,cause:'移除已停止的容器',fix:'docker rm 容器名，docker rm -f 強制刪除執行中容器',example:'docker rm old_container 清理不用的容器',keyword:'刪除,清理,容器',related:['docker stop','docker rmi','docker system prune']},
+{id:'d08',en:'docker rmi',zh:'刪除映像檔',cat:'docker',lvl:1,cause:'移除本機儲存的 Docker image',fix:'docker rmi image名:tag，要先停止使用該 image 的容器',example:'docker rmi nginx:old 刪除舊版映像',keyword:'刪除,映像,清理',related:['docker images','docker rm','docker system prune']},
+{id:'d09',en:'docker images',zh:'列出本機的映像檔',cat:'docker',lvl:1,cause:'顯示所有下載或建立的 Docker images',fix:'docker images 或 docker image ls',example:'docker images 看哪些 image 佔了多少空間',keyword:'映像,清單,空間',related:['docker pull','docker rmi','docker build']},
+{id:'d10',en:'docker build',zh:'根據 Dockerfile 建立映像檔',cat:'docker',lvl:2,cause:'依照 Dockerfile 的指令建立自訂 image',fix:'docker build -t myapp:latest . （注意最後的點）',example:'docker build -t webapp:v1.0 . 在當前目錄建置',keyword:'建置,Dockerfile,自訂',related:['Dockerfile','docker push','docker run']},
+{id:'d11',en:'Dockerfile',zh:'建立映像檔的指令腳本',cat:'docker',lvl:2,cause:'定義 Docker image 如何建立的文字檔',fix:'FROM、RUN、COPY、EXPOSE、CMD 是常用指令',example:'FROM ubuntu:22.04 / RUN apt install nginx / CMD ["nginx","-g","daemon off;"]',keyword:'映像,建置,腳本',related:['docker build','ENTRYPOINT','CMD']},
+{id:'d12',en:'docker-compose',zh:'多容器應用管理工具',cat:'docker',lvl:2,cause:'用 YAML 檔案定義和管理多個容器',fix:'docker compose up -d 啟動，docker compose down 停止',example:'一個指令同時啟動 web + db + redis',keyword:'多容器,YAML,編排',related:['docker-compose.yml','docker network','volume']},
+{id:'d13',en:'docker volume',zh:'容器的持久化儲存空間',cat:'docker',lvl:2,cause:'容器停止後資料不會消失的儲存機制',fix:'docker volume create 建立，-v volume名:/容器路徑 掛載',example:'docker run -v mysql_data:/var/lib/mysql mysql 持久化資料庫',keyword:'儲存,持久,資料',related:['bind mount','docker run','docker-compose']},
+{id:'d14',en:'docker network',zh:'容器間的網路通訊',cat:'docker',lvl:2,cause:'讓多個容器可以互相通訊的虛擬網路',fix:'docker network create mynet，docker run --network mynet',example:'web容器和db容器放同一個network才能連線',keyword:'網路,通訊,隔離',related:['bridge','overlay','docker-compose']},
+{id:'d15',en:'container',zh:'容器（輕量虛擬化）',cat:'docker',lvl:1,cause:'隔離的應用執行環境，比 VM 更輕量',fix:'每個容器共用 host 的 OS kernel，但有獨立的檔案系統',example:'把 nginx 跑在容器裡，方便移植和管理',keyword:'隔離,輕量,虛擬化',related:['Docker','image','VM']},
+{id:'d16',en:'image',zh:'容器映像檔（模板）',cat:'docker',lvl:1,cause:'建立容器的唯讀模板，包含應用程式和依賴',fix:'image 是靜態的，container 是 image 的執行實例',example:'nginx:latest image 是建立 nginx 容器的模板',keyword:'模板,唯讀,映像',related:['container','Dockerfile','registry']},
+{id:'d17',en:'registry',zh:'映像檔倉庫',cat:'docker',lvl:2,cause:'儲存和分發 Docker images 的服務',fix:'公共：Docker Hub；私有：Harbor、AWS ECR',example:'從 Docker Hub pull image 就是從 registry 下載',keyword:'倉庫,存放,分發',related:['Docker Hub','docker pull','docker push']},
+{id:'d18',en:'bind mount',zh:'直接掛載主機目錄到容器',cat:'docker',lvl:2,cause:'把 host 的目錄掛載到容器內，適合開發環境',fix:'docker run -v /主機路徑:/容器路徑 image',example:'docker run -v /var/www:/usr/share/nginx/html nginx',keyword:'目錄,掛載,開發',related:['docker volume','docker run']},
+{id:'d19',en:'port mapping',zh:'容器 port 對應到主機 port',cat:'docker',lvl:1,cause:'把容器內部 port 暴露到主機，讓外部可以存取',fix:'docker run -p 主機port:容器port',example:'docker run -p 8080:80 nginx 用 8080 存取 nginx',keyword:'port,對應,暴露',related:['docker run','-p','firewall']},
+{id:'d20',en:'docker system prune',zh:'清理 Docker 所有未使用資源',cat:'docker',lvl:1,cause:'清除停止的容器、懸空的 image、未使用的網路',fix:'docker system prune 清理，-a 連 image 也清',example:'硬碟被 Docker 吃滿後執行清理',keyword:'清理,空間,垃圾',related:['docker rm','docker rmi','df -h']},
+{id:'d21',en:'entrypoint',zh:'容器啟動時執行的主要程序',cat:'docker',lvl:2,cause:'ENTRYPOINT 定義容器的主要執行程序，不易被覆蓋',fix:'ENTRYPOINT ["nginx", "-g", "daemon off;"]',example:'ENTRYPOINT 讓容器像獨立的指令一樣運作',keyword:'啟動,執行,主程序',related:['CMD','Dockerfile','docker run']},
+{id:'d22',en:'CMD',zh:'容器的預設執行指令',cat:'docker',lvl:2,cause:'Dockerfile 的 CMD 設定容器預設執行的指令，可被覆蓋',fix:'CMD ["nginx", "-g", "daemon off;"]',example:'docker run 後面帶額外指令會覆蓋 CMD',keyword:'預設,指令,Dockerfile',related:['ENTRYPOINT','docker run','Dockerfile']},
+{id:'d23',en:'layer',zh:'映像檔的層（儲存機制）',cat:'docker',lvl:2,cause:'Docker image 由多個唯讀層疊加而成，共享相同層',fix:'每條 Dockerfile 指令建一層，合理排序可減少大小',example:'FROM ubuntu 是第一層，RUN apt install 再加一層',keyword:'層,快取,優化',related:['Dockerfile','image','cache']},
+{id:'d24',en:'docker inspect',zh:'查看容器/映像的詳細設定',cat:'docker',lvl:2,cause:'輸出容器或 image 的完整 JSON 設定資訊',fix:'docker inspect 容器名 或 docker inspect image名',example:'docker inspect nginx | grep IPAddress 查容器IP',keyword:'詳細,設定,JSON',related:['docker ps','docker info']},
+{id:'d25',en:'health check',zh:'容器健康狀態檢查',cat:'docker',lvl:2,cause:'定期檢查容器是否正常運作',fix:'HEALTHCHECK CMD curl -f http://localhost/ 或 docker inspect查狀態',example:'HEALTHCHECK 確保資料庫連線正常才算 healthy',keyword:'健康,監控,狀態',related:['Dockerfile','docker inspect','orchestration']},
+{id:'d26',en:'orchestration',zh:'容器編排管理',cat:'docker',lvl:3,cause:'大規模自動化管理、部署、擴展容器的機制',fix:'常見工具：Kubernetes（K8s）、Docker Swarm',example:'一個指令自動部署100個容器到多台機器',keyword:'Kubernetes,自動,擴展',related:['Kubernetes','Docker Swarm','scaling']},
+{id:'d27',en:'Kubernetes / K8s',zh:'大規模容器編排平台',cat:'docker',lvl:3,cause:'自動部署、擴展、管理容器化應用的系統',fix:'kubectl apply -f deployment.yaml',example:'大型公司用 K8s 管理數百個微服務',keyword:'K8s,微服務,自動化',related:['orchestration','pod','deployment']},
+{id:'d28',en:'pod',zh:'K8s 最小部署單元（一到多個容器）',cat:'docker',lvl:3,cause:'Kubernetes 中共享網路和儲存的容器群組',fix:'kubectl get pods，kubectl describe pod',example:'一個 pod 通常包含一個主容器加上 sidecar',keyword:'Kubernetes,容器,最小單元',related:['Kubernetes','deployment','service']},
+{id:'d29',en:'microservices',zh:'微服務架構',cat:'docker',lvl:3,cause:'把應用拆分成獨立小服務，各自部署和擴展',fix:'每個服務獨立的 container，透過 API 溝通',example:'電商網站拆成：訂單服務、庫存服務、支付服務',keyword:'架構,分散,獨立',related:['Docker','API','Kubernetes']},
+{id:'d30',en:'docker-compose.yml',zh:'多容器服務設定檔',cat:'docker',lvl:2,cause:'用 YAML 定義多個服務的容器設定',fix:'services: / web: / db: 各定義一個服務',example:'一個 yml 定義 nginx+php+mysql 整套環境',keyword:'YAML,多服務,設定',related:['docker compose','docker network','volume']},
+{id:'d31',en:'environment variable',zh:'容器的環境變數',cat:'docker',lvl:1,cause:'在容器啟動時傳入設定值',fix:'docker run -e MYSQL_ROOT_PASSWORD=pass 或在 yml 裡設定',example:'-e DB_HOST=mysql 告訴 app 資料庫在哪',keyword:'設定,傳入,env',related:['docker run','docker-compose.yml','.env file']},
+{id:'d32',en:'.env file',zh:'環境變數檔案',cat:'docker',lvl:2,cause:'儲存敏感設定（密碼、金鑰）的文字檔',fix:'docker-compose 自動讀取同目錄的 .env 檔',example:'.env 裡放 DB_PASSWORD=secret，不要 commit 到 git',keyword:'密碼,設定,敏感',related:['environment variable','docker-compose','gitignore']},
+{id:'d33',en:'docker push',zh:'上傳映像檔到 registry',cat:'docker',lvl:2,cause:'把本機 image 推送到 Docker Hub 或私有 registry',fix:'docker tag 本機image registry/名稱，docker push',example:'docker push myaccount/myapp:v1.0 上傳到 Docker Hub',keyword:'上傳,推送,分享',related:['docker pull','registry','docker build']},
+{id:'d34',en:'multi-stage build',zh:'多階段建構（縮小映像大小）',cat:'docker',lvl:3,cause:'在 Dockerfile 中分多階段建構，只保留最後執行所需',fix:'FROM golang as builder / ... / FROM alpine / COPY --from=builder',example:'Go 程式：先 build，再用 alpine 只放執行檔，image 縮小10倍',keyword:'優化,大小,建置',related:['Dockerfile','layer','docker build']},
+{id:'d35',en:'containerd',zh:'容器執行環境（底層引擎）',cat:'docker',lvl:3,cause:'Docker 和 K8s 底層使用的容器執行時期',fix:'通常不需要直接操作，透過 docker 或 crictl 管理',example:'Docker Desktop 底層就是用 containerd',keyword:'底層,執行環境,OCI',related:['Docker','runc','K8s']},
+{id:'d36',en:'docker stats',zh:'查看容器資源使用量',cat:'docker',lvl:1,cause:'即時顯示容器的 CPU、記憶體、網路使用',fix:'docker stats 所有容器，docker stats 容器名 指定查',example:'docker stats app 看應用程式用了多少記憶體',keyword:'資源,監控,CPU,記憶體',related:['docker top','htop','cgroup']},
+{id:'d37',en:'docker cp',zh:'在容器和主機之間複製檔案',cat:'docker',lvl:1,cause:'把主機檔案複製到容器，或從容器取出檔案',fix:'docker cp 主機檔案 容器名:/容器路徑',example:'docker cp dump.sql mysql:/tmp/ 匯入SQL',keyword:'複製,傳輸,檔案',related:['docker exec','bind mount','scp']},
+{id:'d38',en:'docker commit',zh:'把容器狀態存成新的映像檔',cat:'docker',lvl:2,cause:'把修改過的容器保存為新的 image',fix:'docker commit 容器名 新image名:tag',example:'在容器裡安裝完軟體後 commit 保存',keyword:'儲存,快照,映像',related:['docker build','Dockerfile','image']},
+{id:'d39',en:'swarm',zh:'Docker 原生叢集管理',cat:'docker',lvl:3,cause:'Docker 內建的容器編排功能，管理多台 node',fix:'docker swarm init，docker service create',example:'輕量版的 Kubernetes，適合小型叢集',keyword:'叢集,編排,scale',related:['Kubernetes','orchestration','service']},
+{id:'d40',en:'overlay network',zh:'跨主機容器網路',cat:'docker',lvl:3,cause:'讓不同主機上的容器可以直接通訊',fix:'Docker Swarm 或 K8s 會自動建立',example:'node1 上的 web 容器連到 node2 上的 db 容器',keyword:'跨主機,Swarm,K8s',related:['docker network','swarm','Kubernetes']},
+{id:'d41',en:'Docker Hub',zh:'官方容器映像倉庫',cat:'docker',lvl:1,cause:'Docker 的公共 image 倉庫，有大量官方和社群 image',fix:'hub.docker.com 搜尋，docker pull 下載',example:'nginx、mysql、ubuntu 都有官方 image 在 Docker Hub',keyword:'倉庫,官方,下載',related:['registry','docker pull','image']},
+{id:'d42',en:'restart policy',zh:'容器重啟策略',cat:'docker',lvl:2,cause:'定義容器在特定情況下是否自動重啟',fix:'docker run --restart unless-stopped 或 always',example:'--restart always 確保 Server 重開機後容器自動啟動',keyword:'重啟,自動,高可用',related:['docker run','docker-compose','uptime']},
+{id:'d43',en:'docker network inspect',zh:'查看 Docker 網路詳情',cat:'docker',lvl:2,cause:'顯示 Docker 網路的詳細設定和連接的容器',fix:'docker network inspect bridge',example:'確認哪些容器在同一個網路內',keyword:'網路,詳情,連線',related:['docker network','docker inspect']},
+{id:'d44',en:'image tag',zh:'映像檔的版本標籤',cat:'docker',lvl:1,cause:'用來區分同一個 image 不同版本',fix:'image:tag 格式，latest 是最新版的慣例',example:'nginx:1.24、mysql:8.0、ubuntu:22.04',keyword:'版本,標籤,latest',related:['docker pull','docker tag','semver']},
+{id:'d45',en:'ARG',zh:'Dockerfile 的建置時期變數',cat:'docker',lvl:2,cause:'在 docker build 時傳入的變數，不會保留在最終 image',fix:'ARG VERSION=1.0 定義，docker build --build-arg VERSION=2.0',example:'ARG BASE_IMAGE=ubuntu:22.04 讓 base image 可配置',keyword:'變數,建置,Dockerfile',related:['ENV','Dockerfile','docker build']},
+{id:'d46',en:'ENV',zh:'Dockerfile 的環境變數（持續到容器）',cat:'docker',lvl:2,cause:'設定在 Dockerfile 中的環境變數，會保留在最終 image',fix:'ENV NODE_ENV=production',example:'ENV PATH=$PATH:/app/bin 加到執行路徑',keyword:'環境變數,持久,Dockerfile',related:['ARG','environment variable','.env file']},
+{id:'d47',en:'EXPOSE',zh:'宣告容器對外的 port',cat:'docker',lvl:1,cause:'文件化容器監聽的 port，不自動開放到主機',fix:'EXPOSE 80 宣告，docker run -p 80:80 才真正開放',example:'EXPOSE 8080 讓使用者知道 app 在 8080',keyword:'port,宣告,文件',related:['docker run','-p','port mapping']},
+{id:'d48',en:'WORKDIR',zh:'設定容器的工作目錄',cat:'docker',lvl:1,cause:'Dockerfile 中設定後續指令的執行目錄',fix:'WORKDIR /app，之後的 COPY、RUN 都在 /app 執行',example:'WORKDIR /app / COPY . . 把程式碼複製到 /app',keyword:'目錄,工作,Dockerfile',related:['COPY','RUN','Dockerfile']},
+{id:'d49',en:'COPY vs ADD',zh:'複製檔案到映像的指令',cat:'docker',lvl:2,cause:'COPY 只複製本地檔案；ADD 額外支援 URL 和解壓縮',fix:'建議優先用 COPY，ADD 只在需要解壓縮時使用',example:'COPY requirements.txt . / RUN pip install -r requirements.txt',keyword:'Dockerfile,複製,ADD',related:['WORKDIR','Dockerfile','RUN']},
+{id:'d50',en:'detached mode',zh:'後台執行模式（-d 參數）',cat:'docker',lvl:1,cause:'讓容器在背景執行，不佔用當前終端機',fix:'docker run -d image名，用 docker logs 看輸出',example:'docker run -d -p 80:80 nginx 背景啟動 nginx',keyword:'背景,後台,-d',related:['docker run','docker logs','nohup']},
+
+// CLOUD / DEVOPS (50)
+{id:'c01',en:'CI/CD',zh:'持續整合/持續部署',cat:'cloud',lvl:2,cause:'Continuous Integration/Continuous Deployment，自動化建置測試和部署流程',fix:'常用工具：GitHub Actions、GitLab CI、Jenkins',example:'程式碼 push 後自動測試和部署到 staging',keyword:'自動化,部署,流水線',related:['pipeline','GitHub Actions','Jenkins']},
+{id:'c02',en:'pipeline',zh:'自動化流水線',cat:'cloud',lvl:2,cause:'一系列自動化步驟：建置→測試→部署',fix:'YAML 格式定義各個 stage 和 job',example:'push code → build → test → deploy to prod',keyword:'CI/CD,自動化,流程',related:['CI/CD','GitHub Actions','stage']},
+{id:'c03',en:'deployment',zh:'部署（把應用放到伺服器）',cat:'cloud',lvl:1,cause:'把應用程式發布到目標環境（dev/staging/prod）',fix:'常見方式：git pull、docker pull、ansible playbook',example:'每週五執行 deployment 把新版本推到生產環境',keyword:'發布,上線,版本',related:['rollback','staging','production']},
+{id:'c04',en:'rollback',zh:'版本回滾（回到上一個版本）',cat:'cloud',lvl:2,cause:'新版本出問題時，快速恢復到上一個穩定版本',fix:'git revert、docker pull 舊tag、K8s rollout undo',example:'新版本部署後出錯，立即 rollback 減少影響',keyword:'還原,回滾,緊急',related:['deployment','version','blue-green']},
+{id:'c05',en:'staging',zh:'測試環境（近似正式環境）',cat:'cloud',lvl:1,cause:'與生產環境相似的測試環境，部署前在這裡驗證',fix:'staging → QA測試 → production',example:'新功能先部署到 staging 確認沒問題再上 prod',keyword:'環境,測試,驗證',related:['production','development','deployment']},
+{id:'c06',en:'production',zh:'生產環境（正式運行環境）',cat:'cloud',lvl:1,cause:'實際服務使用者的正式環境',fix:'只有通過測試的版本才部署到 production',example:'prod 環境出問題直接影響所有使用者',keyword:'正式,線上,prod',related:['staging','deployment','rollback']},
+{id:'c07',en:'infrastructure as code',zh:'基礎設施即程式碼',cat:'cloud',lvl:3,cause:'用程式碼定義和管理基礎設施，可版本控制',fix:'Terraform、Ansible、CloudFormation',example:'用 Terraform 一鍵建立 AWS VPC + EC2 + RDS',keyword:'IaC,Terraform,自動化',related:['Terraform','Ansible','DevOps']},
+{id:'c08',en:'Terraform',zh:'基礎設施即程式碼工具',cat:'cloud',lvl:3,cause:'HashiCorp 的 IaC 工具，管理雲端資源',fix:'terraform init/plan/apply/destroy',example:'terraform apply 在 AWS 建立完整的網路架構',keyword:'IaC,AWS,Azure,GCP',related:['IaC','Ansible','cloud']},
+{id:'c09',en:'Ansible',zh:'自動化設定管理工具',cat:'cloud',lvl:2,cause:'用 YAML Playbook 自動化伺服器設定和部署',fix:'ansible-playbook deploy.yml -i hosts',example:'一個 Playbook 同時設定 50 台 Server',keyword:'自動化,Playbook,設定',related:['IaC','Terraform','SSH']},
+{id:'c10',en:'load balancing',zh:'負載均衡',cat:'cloud',lvl:2,cause:'把流量分散到多台伺服器，提高可用性和效能',fix:'nginx upstream、AWS ELB、HAProxy',example:'round-robin 輪流把請求送到各台 web server',keyword:'分流,高可用,擴展',related:['nginx','HAProxy','auto scaling']},
+{id:'c11',en:'auto scaling',zh:'自動擴展（依流量調整資源）',cat:'cloud',lvl:3,cause:'根據負載自動增加或減少伺服器實例',fix:'AWS Auto Scaling Group、K8s HPA',example:'流量暴增時自動從 2 台擴到 10 台',keyword:'彈性,擴展,雲端',related:['load balancing','cloud','K8s']},
+{id:'c12',en:'instance',zh:'雲端虛擬機實例',cat:'cloud',lvl:1,cause:'在雲端平台（AWS/Azure/GCP）上的虛擬機器',fix:'AWS 叫 EC2，Azure 叫 VM，GCP 叫 Compute Engine',example:'在 AWS 開一個 t3.medium instance 跑 web server',keyword:'虛擬機,雲端,EC2',related:['EC2','VM','cloud']},
+{id:'c13',en:'bucket',zh:'雲端物件儲存空間',cat:'cloud',lvl:1,cause:'雲端儲存檔案的容器，AWS 叫 S3 Bucket',fix:'aws s3 cp 上傳，設定 policy 控制存取',example:'靜態網站、備份檔、log 都存到 S3 bucket',keyword:'S3,儲存,AWS',related:['S3','object storage','CDN']},
+{id:'c14',en:'CDN',zh:'內容傳遞網路',cat:'cloud',lvl:2,cause:'把靜態內容快取到全球多個節點，加速下載',fix:'Cloudflare、AWS CloudFront、Akamai',example:'網站圖片從離使用者最近的 CDN 節點傳送',keyword:'加速,快取,全球',related:['Cloudflare','cache','S3']},
+{id:'c15',en:'serverless',zh:'無伺服器運算',cat:'cloud',lvl:3,cause:'不需要管理伺服器，按需執行函式',fix:'AWS Lambda、Azure Functions、GCP Cloud Run',example:'上傳圖片時觸發 Lambda 自動壓縮',keyword:'函式,觸發,按需',related:['Lambda','FaaS','event-driven']},
+{id:'c16',en:'microservice',zh:'微服務',cat:'cloud',lvl:3,cause:'把大型應用拆成多個獨立小服務',fix:'各服務獨立部署、擴展、技術選型',example:'Netflix 用上千個微服務組成整個平台',keyword:'架構,獨立,分散',related:['Docker','K8s','API gateway']},
+{id:'c17',en:'API gateway',zh:'API 閘道',cat:'cloud',lvl:2,cause:'統一管理 API 的入口，做認證、限流、路由',fix:'Kong、AWS API Gateway、nginx',example:'所有外部請求先過 API gateway 再轉到各微服務',keyword:'API,路由,認證',related:['API','microservice','nginx']},
+{id:'c18',en:'monitoring',zh:'監控',cat:'cloud',lvl:2,cause:'持續觀察系統健康狀態和效能指標',fix:'Prometheus + Grafana、Datadog、Zabbix',example:'監控 CPU/記憶體/磁碟超過閾值就發警報',keyword:'監控,指標,警報',related:['alerting','Prometheus','Grafana']},
+{id:'c19',en:'alerting',zh:'告警（異常通知）',cat:'cloud',lvl:2,cause:'系統異常或指標超出閾值時主動通知',fix:'設定 webhook 到 Slack/Line/Email',example:'Server CPU 超過 90% 自動發 Line 通知',keyword:'警報,通知,異常',related:['monitoring','Prometheus','webhook']},
+{id:'c20',en:'log aggregation',zh:'日誌集中管理',cat:'cloud',lvl:2,cause:'把多台伺服器的 log 集中到一個地方查詢',fix:'ELK Stack（Elasticsearch+Logstash+Kibana）、Loki',example:'查某個錯誤影響了哪些 Server 的 log',keyword:'日誌,集中,ELK',related:['ELK','Loki','Kibana']},
+{id:'c21',en:'Git',zh:'版本控制系統',cat:'cloud',lvl:1,cause:'分散式版本控制，追蹤程式碼變更歷史',fix:'git add → commit → push 基本流程',example:'git commit -m "fix: 修復登入bug" 記錄修改',keyword:'版本,控制,程式碼',related:['GitHub','branch','merge']},
+{id:'c22',en:'branch',zh:'Git 分支',cat:'cloud',lvl:1,cause:'在主線之外獨立開發功能，不影響主線',fix:'git checkout -b feature/new 建立，git merge 合併',example:'每個新功能開一個 branch，測試完再 merge 到 main',keyword:'分支,開發,Git',related:['Git','merge','pull request']},
+{id:'c23',en:'merge',zh:'合併程式碼分支',cat:'cloud',lvl:1,cause:'把一個分支的變更整合到另一個分支',fix:'git merge feature/new，或透過 pull request',example:'feature branch 開發完成 merge 回 main',keyword:'合併,Git,分支',related:['branch','pull request','conflict']},
+{id:'c24',en:'pull request',zh:'合併請求（Code Review 機制）',cat:'cloud',lvl:2,cause:'申請將分支合併，讓其他人 review 後再 merge',fix:'GitHub/GitLab 上提交 PR，reviewer 審核',example:'每次 PR 必須有人 approve 才能 merge 到 main',keyword:'Code Review,協作,PR',related:['merge','branch','Git']},
+{id:'c25',en:'conflict',zh:'Git 合併衝突',cat:'cloud',lvl:2,cause:'兩個分支修改了同一行程式碼，無法自動合併',fix:'手動編輯衝突檔案，選擇保留哪個版本',example:'兩人同時修改 config.yml 的同一行造成 conflict',keyword:'衝突,Git,解決',related:['merge','branch','pull request']},
+{id:'c26',en:'webhook',zh:'事件觸發的 HTTP 回調',cat:'cloud',lvl:2,cause:'當事件發生時，系統自動發送 HTTP 請求通知',fix:'在 GitHub/GitLab 設定 webhook URL',example:'push 程式碼後 webhook 觸發 CI/CD pipeline',keyword:'觸發,通知,自動',related:['CI/CD','API','HTTP']},
+{id:'c27',en:'artifact',zh:'建置產出物',cat:'cloud',lvl:2,cause:'CI/CD 過程中產生的可部署檔案（zip、jar、docker image）',fix:'CI pipeline 產生 artifact，再由 CD 部署',example:'GitHub Actions build 完產生 .zip artifact',keyword:'建置,產出,CI/CD',related:['CI/CD','pipeline','deployment']},
+{id:'c28',en:'environment variable',zh:'環境變數（設定/密碼管理）',cat:'cloud',lvl:1,cause:'在不同環境（dev/prod）傳入不同設定值',fix:'在 CI/CD 平台設定 secret，不要 hardcode 在程式碼',example:'DB_PASSWORD 透過環境變數傳入，不 commit 到 Git',keyword:'設定,密碼,安全',related:['secret','config','Docker']},
+{id:'c29',en:'secret management',zh:'密鑰管理（安全存放密碼）',cat:'cloud',lvl:3,cause:'安全存放和存取密碼、API Key、憑證',fix:'HashiCorp Vault、AWS Secrets Manager、GitHub Secrets',example:'DB 密碼存在 Vault，部署時動態取得，不寫死',keyword:'密碼,安全,存取',related:['environment variable','Vault','security']},
+{id:'c30',en:'blue-green deployment',zh:'藍綠部署（零停機切換）',cat:'cloud',lvl:3,cause:'同時維持新舊兩個版本，流量切換時不中斷服務',fix:'兩套相同環境，load balancer 切換流量',example:'新版本（綠）上線測試沒問題，再把流量從藍切到綠',keyword:'零停機,部署,切換',related:['rollback','load balancer','deployment']},
+{id:'c31',en:'canary deployment',zh:'金絲雀部署（逐步發布）',cat:'cloud',lvl:3,cause:'先把新版本推給少量使用者測試，確認沒問題再全量',fix:'nginx/K8s 控制流量比例，5%→20%→100%',example:'新功能先給 5% 使用者，確認正常再全量上線',keyword:'逐步,測試,風險控制',related:['deployment','A/B testing','K8s']},
+{id:'c32',en:'backup',zh:'資料備份',cat:'cloud',lvl:1,cause:'複製資料到另一個位置，防止資料遺失',fix:'crontab + rsync/tar 定期備份，3-2-1 備份原則',example:'每天凌晨 2 點備份資料庫到 NAS',keyword:'備份,資料,安全',related:['rsync','crontab','disaster recovery']},
+{id:'c33',en:'disaster recovery',zh:'災難復原',cat:'cloud',lvl:2,cause:'當系統發生重大故障時，恢復服務的計畫和流程',fix:'RTO（恢復時間目標）和 RPO（恢復點目標）',example:'用 ReaR 備份系統，Server 壞掉後還原到新機器',keyword:'恢復,備份,RTO,RPO',related:['backup','ReaR','RTO']},
+{id:'c34',en:'high availability',zh:'高可用性（HA）',cat:'cloud',lvl:2,cause:'系統設計確保在部分故障時仍能繼續服務',fix:'冗餘設備、load balancer、自動切換',example:'Master-Slave 資料庫，主掛掉自動切換到備機',keyword:'HA,備援,容錯',related:['load balancer','failover','cluster']},
+{id:'c35',en:'failover',zh:'故障轉移（自動切換備援）',cat:'cloud',lvl:2,cause:'主要節點故障時自動切換到備用節點',fix:'heartbeat 監測，故障時自動更新 DNS/VIP',example:'主 Server 故障，Keepalived 自動把 VIP 移到備機',keyword:'備援,自動切換,HA',related:['high availability','cluster','keepalived']},
+{id:'c36',en:'cluster',zh:'叢集（多機協同工作）',cat:'cloud',lvl:2,cause:'多台機器協同提供服務，提升效能和可靠性',fix:'K8s cluster、Galera cluster（MySQL）',example:'資料庫叢集：3 台機器互為備援',keyword:'多機,協同,高可用',related:['K8s','high availability','failover']},
+{id:'c37',en:'container registry',zh:'容器映像倉庫',cat:'cloud',lvl:2,cause:'儲存和管理 Docker image 的服務',fix:'Docker Hub、AWS ECR、GitLab Registry、Harbor',example:'CI build 完的 image 推到 registry，CD 從這裡拉',keyword:'映像,倉庫,Docker',related:['Docker Hub','docker push','CI/CD']},
+{id:'c38',en:'ingress',zh:'K8s 的外部流量入口',cat:'cloud',lvl:3,cause:'Kubernetes 中管理外部 HTTP/HTTPS 流量路由的資源',fix:'kubectl apply -f ingress.yaml，需要 ingress controller',example:'ingress 把 /api 路由到 api-service，/web 到 web-service',keyword:'K8s,路由,入口',related:['Kubernetes','nginx ingress','service']},
+{id:'c39',en:'namespace (K8s)',zh:'K8s 的邏輯隔離空間（環境分隔）',cat:'cloud',lvl:3,cause:'在 K8s 中建立多個邏輯隔離的環境',fix:'kubectl create namespace staging，kubectl -n staging get pods',example:'dev、staging、prod 各一個 namespace',keyword:'K8s,隔離,環境',related:['Kubernetes','pod','RBAC']},
+{id:'c40',en:'RBAC',zh:'角色存取控制',cat:'cloud',lvl:2,cause:'Role-Based Access Control，根據角色分配權限',fix:'K8s RBAC、Linux sudo 設定、DB 使用者權限',example:'開發者只能存取 dev namespace，不能碰 prod',keyword:'權限,角色,安全',related:['K8s','security','IAM']},
+{id:'c41',en:'SLA',zh:'服務水準協議',cat:'cloud',lvl:2,cause:'Service Level Agreement，定義服務可用性目標',fix:'常見：99.9%（每年 8.7 小時停機）',example:'SLA 99.99% 代表一年只能停機 52 分鐘',keyword:'可用性,合約,保證',related:['uptime','high availability','SLO']},
+{id:'c42',en:'uptime',zh:'系統運行時間',cat:'cloud',lvl:1,cause:'系統持續正常運行的時間',fix:'uptime 指令查看，或計算 (total-downtime)/total',example:'uptime 99.95% 代表一年停機約 4.4 小時',keyword:'可用性,運行,監控',related:['SLA','downtime','monitoring']},
+{id:'c43',en:'downtime',zh:'系統停機時間',cat:'cloud',lvl:1,cause:'系統無法提供服務的時間',fix:'監控+告警快速發現，blue-green 減少計畫性停機',example:'每次版本更新造成 5 分鐘 downtime',keyword:'停機,中斷,影響',related:['uptime','SLA','deployment']},
+{id:'c44',en:'health check',zh:'健康檢查端點',cat:'cloud',lvl:2,cause:'提供 load balancer 確認服務是否正常的 API 端點',fix:'通常是 GET /health 回傳 200 OK',example:'nginx 的 upstream health check 每30秒確認後端存活',keyword:'健康,監控,load balancer',related:['load balancer','monitoring','uptime']},
+{id:'c45',en:'rate limiting',zh:'限流（控制請求頻率）',cat:'cloud',lvl:2,cause:'限制單一使用者或 IP 的請求頻率',fix:'nginx limit_req_zone、API Gateway 設定',example:'限制每個 IP 每秒最多 100 個請求防 DDoS',keyword:'限流,安全,API',related:['DDoS','nginx','API gateway']},
+{id:'c46',en:'cache',zh:'快取',cat:'cloud',lvl:1,cause:'把常用資料暫存在快速存取位置，減少重複計算',fix:'Redis（記憶體快取）、CDN（靜態資源）、nginx（HTTP快取）',example:'把資料庫查詢結果存到 Redis，下次直接回傳',keyword:'快取,速度,Redis',related:['Redis','CDN','nginx']},
+{id:'c47',en:'Redis',zh:'記憶體資料庫（快取/Session）',cat:'cloud',lvl:2,cause:'In-memory 資料結構儲存，極高速存取',fix:'redis-cli 操作，docker run -d redis',example:'Session 存 Redis、API 回應快取、訊息佇列',keyword:'記憶體,快取,session',related:['cache','queue','database']},
+{id:'c48',en:'queue',zh:'訊息佇列',cat:'cloud',lvl:2,cause:'非同步處理工作的緩衝機制',fix:'RabbitMQ、Redis Queue、AWS SQS',example:'使用者下單後放入 queue，背景慢慢處理庫存',keyword:'非同步,任務,緩衝',related:['Redis','RabbitMQ','async']},
+{id:'c49',en:'observability',zh:'可觀測性（監控三支柱）',cat:'cloud',lvl:3,cause:'系統內部狀態的可見度：Logs + Metrics + Traces',fix:'完整的 observability 讓你快速定位問題',example:'用 OpenTelemetry 收集 traces，找出哪個 API 最慢',keyword:'監控,追蹤,指標',related:['monitoring','tracing','logging']},
+{id:'c50',en:'tracing',zh:'分散式追蹤',cat:'cloud',lvl:3,cause:'追蹤一個請求在多個微服務間的完整路徑',fix:'Jaeger、Zipkin、AWS X-Ray',example:'一個 API 呼叫了 5 個服務，用 tracing 找哪個最慢',keyword:'追蹤,效能,微服務',related:['observability','microservice','Jaeger']},
+
+// VMWARE (40)
+{id:'v01',en:'snapshot',zh:'虛擬機快照（還原點）',cat:'vmware',lvl:1,cause:'記錄 VM 在某一時刻的完整狀態',fix:'右鍵 VM → Snapshots → Take Snapshot',example:'升級前先拍快照，出問題馬上回到之前狀態',keyword:'還原,備份,快照',related:['clone','backup','restore']},
+{id:'v02',en:'datastore',zh:'VMware 儲存空間',cat:'vmware',lvl:1,cause:'存放 VM 檔案（vmdk、vmx）的儲存位置',fix:'vCenter 管理介面查看，注意 datastore 空間是否足夠',example:'datastore 快滿了導致 VM 無法開機',keyword:'儲存,空間,VMDK',related:['VMDK','vSAN','NFS']},
+{id:'v03',en:'vSwitch',zh:'VMware 虛擬交換器',cat:'vmware',lvl:2,cause:'連接 VM 網路介面的虛擬 Layer 2 交換器',fix:'Standard vSwitch 或 Distributed vSwitch',example:'vSwitch 設定 VLAN 讓不同 VM 隔離',keyword:'虛擬網路,交換器,VLAN',related:['portgroup','VLAN','vSphere']},
+{id:'v04',en:'NAT mode',zh:'VMware 的 NAT 網路模式',cat:'vmware',lvl:1,cause:'VM 透過主機 IP 上網，外部無法直接存取 VM',fix:'VMware Network Adapter 選 NAT',example:'測試用 VM 選 NAT，不需要配置額外 IP',keyword:'NAT,網路,虛擬機',related:['bridged','host-only','network']},
+{id:'v05',en:'bridged mode',zh:'VMware 橋接網路模式',cat:'vmware',lvl:1,cause:'VM 直接連接到實體網路，取得真實 IP',fix:'VMware Network Adapter 選 Bridged',example:'需要讓公司其他人連到 VM 時選 Bridged',keyword:'橋接,真實IP,網路',related:['NAT mode','host-only','network']},
+{id:'v06',en:'host-only mode',zh:'VMware 僅主機網路模式',cat:'vmware',lvl:1,cause:'VM 只能和主機通訊，無法連外網',fix:'適合完全隔離的測試環境',example:'安全測試 VM 選 host-only，防止惡意程式外洩',keyword:'隔離,主機,測試',related:['NAT mode','bridged mode','network']},
+{id:'v07',en:'VMware Tools',zh:'VMware 客端增強工具',cat:'vmware',lvl:1,cause:'安裝在 VM 裡的驅動和服務，提升效能和功能',fix:'在 VM 裡 sudo apt install open-vm-tools',example:'安裝 VMware Tools 後才能共用剪貼簿和拖放檔案',keyword:'工具,驅動,效能',related:['open-vm-tools','VMware','VM']},
+{id:'v08',en:'VMDK',zh:'VMware 虛擬硬碟格式',cat:'vmware',lvl:1,cause:'Virtual Machine Disk，VMware 的虛擬硬碟檔案格式',fix:'VMDK 可以轉換為其他格式（qcow2）用在 KVM',example:'VM 的硬碟存在 datastore 就是 .vmdk 檔',keyword:'虛擬硬碟,格式,檔案',related:['datastore','qcow2','snapshot']},
+{id:'v09',en:'clone',zh:'複製虛擬機',cat:'vmware',lvl:1,cause:'建立一台 VM 的完整副本',fix:'Full Clone：完全獨立；Linked Clone：節省空間',example:'把設定好的模板 VM clone 出 10 台測試機',keyword:'複製,模板,快速部署',related:['snapshot','template','VM']},
+{id:'v10',en:'template',zh:'VM 模板（部署基礎）',cat:'vmware',lvl:2,cause:'建立好的 VM 轉成模板，快速部署相同設定的 VM',fix:'右鍵 VM → Convert to Template',example:'Ubuntu 22.04 + 常用套件設定好後轉成 template',keyword:'模板,部署,標準化',related:['clone','snapshot','vSphere']},
+{id:'v11',en:'vSphere',zh:'VMware 企業虛擬化平台',cat:'vmware',lvl:2,cause:'VMware 的企業級虛擬化套件，包含 ESXi + vCenter',fix:'透過 vSphere Client 或 Web Client 管理',example:'公司的 Server 虛擬化基礎設施用 vSphere 管理',keyword:'企業,虛擬化,平台',related:['ESXi','vCenter','vMotion']},
+{id:'v12',en:'ESXi',zh:'VMware 的 Hypervisor（主機作業系統）',cat:'vmware',lvl:2,cause:'直接安裝在硬體上的虛擬化層（Type-1 Hypervisor）',fix:'透過 SSH 或 Web GUI 管理 ESXi 主機',example:'Server 裝 ESXi 後才能在上面跑多台 VM',keyword:'Hypervisor,主機,Type-1',related:['vSphere','vCenter','Proxmox']},
+{id:'v13',en:'vCenter',zh:'VMware 集中管理平台',cat:'vmware',lvl:2,cause:'統一管理多台 ESXi 主機和所有 VM',fix:'vCenter Server Appliance（VCSA）部署為 VM',example:'透過一個介面管理全公司 50 台 ESXi',keyword:'集中管理,ESXi,企業',related:['ESXi','vSphere','vMotion']},
+{id:'v14',en:'vMotion',zh:'VM 即時遷移（不停機移動）',cat:'vmware',lvl:2,cause:'把執行中的 VM 從一台 ESXi 主機搬到另一台，不停機',fix:'需要共享儲存（NFS/vSAN）和相同網路',example:'ESXi 主機要維修時，把所有 VM 用 vMotion 搬走',keyword:'遷移,不停機,HA',related:['vCenter','DRS','shared storage']},
+{id:'v15',en:'Proxmox',zh:'開源虛擬化平台（免費替代VMware）',cat:'vmware',lvl:2,cause:'基於 Debian 的開源 Hypervisor，支援 KVM 和 LXC',fix:'Web GUI 管理，免費且功能豐富',example:'小公司用 Proxmox 取代昂貴的 VMware',keyword:'開源,免費,KVM',related:['KVM','LXC','ESXi']},
+{id:'v16',en:'KVM',zh:'Linux 核心虛擬化模組',cat:'vmware',lvl:2,cause:'Kernel-based Virtual Machine，Linux 內建虛擬化',fix:'virsh 指令管理，或用 virt-manager GUI',example:'Ubuntu Server 用 KVM + virsh 管理 VM',keyword:'Linux,虛擬化,開源',related:['Proxmox','QEMU','virsh']},
+{id:'v17',en:'LXC',zh:'Linux 容器（比 VM 更輕量）',cat:'vmware',lvl:2,cause:'Linux Containers，共用核心的系統容器',fix:'lxc-create 建立，Proxmox 支援 LXC',example:'Proxmox 上用 LXC 跑輕量的服務比 VM 省資源',keyword:'輕量,容器,Linux',related:['Docker','Proxmox','KVM']},
+{id:'v18',en:'VT-x / AMD-V',zh:'CPU 虛擬化支援（必須在 BIOS 開啟）',cat:'vmware',lvl:1,cause:'CPU 提供的硬體虛擬化指令集',fix:'在 BIOS 的 CPU Configuration 開啟',example:'Proxmox/VMware 裝好卻無法建 VM，通常是 VT-x 沒開',keyword:'CPU,BIOS,虛擬化',related:['BIOS','ESXi','KVM']},
+{id:'v19',en:'shared storage',zh:'共用儲存（叢集 VM 共享）',cat:'vmware',lvl:2,cause:'多台 ESXi 主機存取同一個儲存，是 vMotion 的前提',fix:'NFS、iSCSI、vSAN 都可以作為共用儲存',example:'沒有 shared storage 就無法使用 vMotion 或 HA',keyword:'共用,儲存,NFS,iSCSI',related:['vMotion','vCenter','NFS']},
+{id:'v20',en:'DRS',zh:'分散式資源排程',cat:'vmware',lvl:2,cause:'Distributed Resource Scheduler，自動平衡 ESXi 主機的負載',fix:'vCenter 開啟 DRS，設定自動/手動模式',example:'DRS 自動把 VM 從負載高的主機搬到低的',keyword:'負載平衡,自動,vCenter',related:['vMotion','vCenter','cluster']},
+{id:'v21',en:'HA',zh:'VMware 高可用性',cat:'vmware',lvl:2,cause:'ESXi 主機故障時，自動在其他主機重啟 VM',fix:'vCenter 叢集開啟 HA 功能',example:'ESXi 當機，HA 在 5 分鐘內在另一台主機重啟 VM',keyword:'高可用,容錯,叢集',related:['vCenter','DRS','failover']},
+{id:'v22',en:'OVA / OVF',zh:'VM 匯出/匯入格式',cat:'vmware',lvl:2,cause:'Open Virtualization Format，跨平台 VM 打包格式',fix:'File → Export OVF 匯出，Deploy OVF Template 匯入',example:'把設定好的 VM 匯出為 OVA 備份或轉到其他平台',keyword:'匯入,匯出,跨平台',related:['VMDK','template','clone']},
+{id:'v23',en:'suspend',zh:'暫停虛擬機',cat:'vmware',lvl:1,cause:'把 VM 的執行狀態儲存到磁碟，暫時停止執行',fix:'右鍵 VM → Suspend，Resume 恢復',example:'Suspend 和 Snapshot 不同，Suspend 沒有記錄點',keyword:'暫停,儲存,狀態',related:['snapshot','pause','power off']},
+{id:'v24',en:'power management',zh:'電源管理',cat:'vmware',lvl:1,cause:'控制 VM 的開/關/暫停/重啟',fix:'BIOS/vSphere 設定，影響 Server 耗電',example:'下班後自動關閉測試 VM 節省資源',keyword:'電源,省電,控制',related:['BIOS','suspend','shutdown']},
+{id:'v25',en:'hot add',zh:'熱插拔（不停機新增資源）',cat:'vmware',lvl:2,cause:'在 VM 執行中動態增加 CPU 或記憶體',fix:'需要在 VM 設定啟用 Hot Add 功能',example:'記憶體不夠了，不關機直接 Hot Add 4GB',keyword:'不停機,動態,資源',related:['vSphere','memory','CPU']},
+{id:'v26',en:'memory balloon',zh:'記憶體氣球（動態回收記憶體）',cat:'vmware',lvl:3,cause:'VMware Tools 的功能，讓 Hypervisor 動態回收 VM 未使用的記憶體',fix:'安裝 VMware Tools 才會運作',example:'Host 記憶體不足時，balloon driver 從 VM 回收記憶體',keyword:'記憶體,動態,回收',related:['VMware Tools','memory','vSphere']},
+{id:'v27',en:'thin provision',zh:'精簡佈建（動態佔用空間）',cat:'vmware',lvl:2,cause:'虛擬硬碟實際只佔用已用空間，不預先分配全部',fix:'建立 VMDK 時選 Thin Provision',example:'設定 100GB thin 的 VMDK，實際只用 5GB 就只佔 5GB',keyword:'空間,動態,thin',related:['thick provision','VMDK','datastore']},
+{id:'v28',en:'thick provision',zh:'完整佈建（預先分配全部空間）',cat:'vmware',lvl:2,cause:'建立時就預先分配全部儲存空間',fix:'Eager Zeroed Thick 效能最好但建立最慢',example:'生產 VM 用 thick provision 確保空間可用',keyword:'空間,預先,thick',related:['thin provision','VMDK','performance']},
+{id:'v29',en:'Hyper-V',zh:'Microsoft 虛擬化平台',cat:'vmware',lvl:2,cause:'Windows Server 內建的 Hypervisor',fix:'Windows Server Manager 安裝 Hyper-V 角色',example:'公司有 Windows Server 時可用 Hyper-V 不買 VMware',keyword:'Windows,Microsoft,Hypervisor',related:['VMware','KVM','VM']},
+{id:'v30',en:'live migration',zh:'即時遷移（VM不停機搬移）',cat:'vmware',lvl:2,cause:'把執行中的 VM 從一台主機搬到另一台而不中斷服務',fix:'VMware 叫 vMotion，Hyper-V 叫 Live Migration',example:'ESXi 主機要硬體維修前，先把 VM 都 vMotion 搬走',keyword:'遷移,不停機,搬移',related:['vMotion','vCenter','HA']},
+{id:'v31',en:'resource pool',zh:'資源池（限制/保障資源）',cat:'vmware',lvl:2,cause:'把多個 VM 的 CPU/記憶體資源用池管理',fix:'vCenter 建立 Resource Pool，設定 Reservation/Limit',example:'重要 VM 加入有 Reservation 的 pool 確保資源',keyword:'資源,限制,保障',related:['vCenter','DRS','memory']},
+{id:'v32',en:'vSAN',zh:'VMware 軟體定義儲存',cat:'vmware',lvl:3,cause:'把多台 ESXi 的本機磁碟組成共享儲存',fix:'不需要額外 NAS/SAN 設備，ESXi 主機磁碟互相提供',example:'3 台 ESXi + 各自的 SSD 組成 vSAN 叢集',keyword:'軟體定義,儲存,共享',related:['shared storage','ESXi','datastore']},
+{id:'v33',en:'portgroup',zh:'虛擬埠群組（VM 網路設定）',cat:'vmware',lvl:2,cause:'vSwitch 上的一組網路設定，VM 連接到 portgroup',fix:'vSphere 建立 portgroup 並指定 VLAN ID',example:'不同部門的 VM 連接到不同 portgroup 隔離網路',keyword:'VLAN,網路,vSwitch',related:['vSwitch','VLAN','vSphere']},
+{id:'v34',en:'consolidate snapshot',zh:'合併快照（清理快照鏈）',cat:'vmware',lvl:2,cause:'把多個快照合併回主要磁碟，釋放空間',fix:'右鍵 VM → Consolidate 或在 Snapshot Manager 刪除',example:'快照太多導致 VM 效能下降，執行 consolidate',keyword:'快照,合併,空間',related:['snapshot','datastore','VMDK']},
+{id:'v35',en:'guest OS',zh:'虛擬機上安裝的客端作業系統',cat:'vmware',lvl:1,cause:'在 VM 內部執行的作業系統',fix:'設定 VM 時要選正確的 Guest OS 類型',example:'Guest OS 是 Ubuntu 22.04，Host OS 是 VMware ESXi',keyword:'作業系統,客端,VM',related:['VMware Tools','VM','ESXi']},
+{id:'v36',en:'host OS',zh:'主機作業系統（Hypervisor 執行的系統）',cat:'vmware',lvl:1,cause:'執行 Hypervisor 的底層作業系統',fix:'ESXi 直接是 Host OS；Workstation 跑在 Windows/Linux 上',example:'你的 Windows 是 Host OS，VM 裡的 Ubuntu 是 Guest OS',keyword:'主機,底層,Hypervisor',related:['guest OS','ESXi','Hypervisor']},
+{id:'v37',en:'VMware Workstation',zh:'桌面虛擬化軟體',cat:'vmware',lvl:1,cause:'在 Windows/Linux 桌面上執行 VM 的工具',fix:'安裝後建立 VM，比 VirtualBox 功能更多',example:'工程師在 Windows 筆電上用 Workstation 跑 Linux VM',keyword:'桌面,工程師,測試',related:['VirtualBox','VMware','VM']},
+{id:'v38',en:'VirtualBox',zh:'免費桌面虛擬化軟體',cat:'vmware',lvl:1,cause:'Oracle 的免費開源桌面虛擬化工具',fix:'官網下載安裝，Guest Additions 提升效能',example:'學生或小型測試用 VirtualBox，完全免費',keyword:'免費,開源,桌面',related:['VMware Workstation','VM','snapshot']},
+{id:'v39',en:'migration',zh:'VM 遷移',cat:'vmware',lvl:2,cause:'把 VM 從一個環境移動到另一個環境',fix:'VMware Converter、手動 export/import、vMotion',example:'把舊 vSphere 的 VM 遷移到新 vSphere 環境',keyword:'搬移,遷移,升級',related:['vMotion','OVA','clone']},
+{id:'v40',en:'P2V',zh:'實體機轉虛擬機',cat:'vmware',lvl:2,cause:'Physical to Virtual，把現有實體 Server 轉成 VM',fix:'VMware vCenter Converter 或 Acronis',example:'舊的實體 Server 要退役，用 P2V 保留成 VM',keyword:'虛擬化,轉換,實體',related:['VMware Converter','clone','migration']},
+
+// BIOS / HARDWARE (40)
+{id:'b01',en:'BIOS / UEFI',zh:'主機板韌體介面',cat:'bios',lvl:1,cause:'Basic Input/Output System / Unified Extensible Firmware Interface，硬體初始化和開機管理',fix:'開機時按 Del、F2 或 F10 進入',example:'開機後按 DEL 進 BIOS 調整開機順序',keyword:'開機,韌體,設定',related:['boot order','Secure Boot','POST']},
+{id:'b02',en:'boot order',zh:'開機順序設定',cat:'bios',lvl:1,cause:'設定 BIOS 依序嘗試哪些裝置開機',fix:'BIOS → Boot → Boot Order，調整順序後 F10 存檔',example:'裝系統前調整 CD/USB 在硬碟前面',keyword:'開機,順序,USB',related:['BIOS','USB boot','PXE boot']},
+{id:'b03',en:'Secure Boot',zh:'安全開機',cat:'bios',lvl:2,cause:'只允許執行有簽章的開機程式，防止惡意程式',fix:'安裝 Linux 有時需要關閉：BIOS → Secure Boot → Disabled',example:'安裝 Ubuntu 出現 Secure Boot 錯誤，進 BIOS 關掉',keyword:'安全,簽章,Linux',related:['BIOS','UEFI','boot']},
+{id:'b04',en:'RAID',zh:'磁碟陣列（資料保護/效能）',cat:'bios',lvl:1,cause:'Redundant Array of Independent Disks',fix:'RAID 0=效能；RAID 1=鏡像；RAID 5=效能+保護',example:'RAID 1 兩顆硬碟互相鏡像，一顆壞不影響運作',keyword:'磁碟陣列,備援,效能',related:['RAID 0','RAID 1','RAID 5','mdadm']},
+{id:'b05',en:'RAID 0',zh:'磁碟陣列條帶模式（提升速度，無保護）',cat:'bios',lvl:1,cause:'資料分散寫在多顆硬碟，速度快但一顆壞全部遺失',fix:'至少2顆硬碟，不建議存放重要資料',example:'影片剪輯暫存用 RAID 0 提升讀寫速度',keyword:'條帶,速度,無保護',related:['RAID','mdadm','striping']},
+{id:'b06',en:'RAID 1',zh:'磁碟鏡像（資料完整複製）',cat:'bios',lvl:1,cause:'資料完整複製到每顆硬碟，一顆壞不影響',fix:'兩顆容量相同的硬碟',example:'重要資料用 RAID 1，一顆壞了換掉自動重建',keyword:'鏡像,備援,保護',related:['RAID','mdadm','mirroring']},
+{id:'b07',en:'RAID 5',zh:'磁碟陣列（效能+容錯）',cat:'bios',lvl:2,cause:'分散式奇偶校驗，可容一顆硬碟故障',fix:'至少3顆硬碟，N-1 的容量可用',example:'3顆1TB的 RAID 5 = 2TB可用，容一顆損壞',keyword:'奇偶,容錯,效能',related:['RAID','parity','mdadm']},
+{id:'b08',en:'RAID 10',zh:'鏡像+條帶（最高可靠性）',cat:'bios',lvl:2,cause:'RAID 1+0，先鏡像再條帶，兼顧效能和保護',fix:'至少4顆硬碟，一半作備份',example:'Database Server 常用 RAID 10，速度快又有保護',keyword:'鏡像,條帶,企業',related:['RAID 1','RAID 0','RAID 5']},
+{id:'b09',en:'POST',zh:'開機自我檢測',cat:'bios',lvl:1,cause:'Power-On Self Test，電源打開後 BIOS 檢查硬體',fix:'POST 失敗會發出嗶聲，根據嗶聲次數判斷問題',example:'開機後停在 POST 畫面不動，通常是記憶體問題',keyword:'開機,檢測,嗶聲',related:['BIOS','beep code','hardware']},
+{id:'b10',en:'PXE boot',zh:'網路開機（遠端安裝系統）',cat:'bios',lvl:2,cause:'Preboot eXecution Environment，從網路伺服器開機安裝系統',fix:'BIOS 開啟 PXE，配置 DHCP 和 TFTP 伺服器',example:'大量 Server 重灌系統用 PXE，不需要 USB 一台台裝',keyword:'網路開機,遠端,批量',related:['DHCP','TFTP','boot']},
+{id:'b11',en:'Hyper-Threading',zh:'超執行緒技術',cat:'bios',lvl:2,cause:'Intel CPU 的技術，一個實體核心模擬兩個邏輯核心',fix:'BIOS → Advanced → CPU Configuration → Enable',example:'4核8緒的 CPU，系統看起來有8個邏輯 CPU',keyword:'CPU,效能,Intel',related:['BIOS','CPU','virtualization']},
+{id:'b12',en:'CPU C-States',zh:'CPU 省電狀態',cat:'bios',lvl:3,cause:'CPU 在閒置時降低功耗的休眠狀態',fix:'低延遲應用可以在 BIOS 關閉 C-States',example:'虛擬化 Server 建議關閉 C-States 提升穩定性',keyword:'省電,延遲,BIOS',related:['power management','CPU','BIOS']},
+{id:'b13',en:'ECC memory',zh:'錯誤更正記憶體',cat:'bios',lvl:3,cause:'Error Correcting Code，能自動偵測和修正記憶體錯誤',fix:'Server 用途建議使用 ECC，需要主機板支援',example:'資料庫 Server 必須用 ECC 記憶體防止資料錯誤',keyword:'記憶體,Server,錯誤更正',related:['RAM','BIOS','Server']},
+{id:'b14',en:'AHCI',zh:'硬碟接口模式（SATA最佳模式）',cat:'bios',lvl:2,cause:'Advanced Host Controller Interface，SATA 硬碟的進階控制模式',fix:'BIOS → Storage → SATA Mode → AHCI（安裝OS前設定）',example:'AHCI 比 IDE 模式效能好，支援 NCQ 和熱插拔',keyword:'SATA,硬碟,模式',related:['BIOS','SATA','NVMe']},
+{id:'b15',en:'NVMe',zh:'高速固態硬碟接口協議',cat:'bios',lvl:2,cause:'Non-Volatile Memory Express，透過 PCIe 直連的超高速儲存協議',fix:'M.2 NVMe 比 SATA SSD 快 3-5 倍',example:'M.2 NVMe SSD 速度可達 7000MB/s，是 SATA 的 7 倍',keyword:'SSD,PCIe,速度',related:['SATA','AHCI','SSD']},
+{id:'b16',en:'SATA',zh:'硬碟接口標準',cat:'bios',lvl:1,cause:'Serial ATA，連接硬碟和光碟機的接口',fix:'最快 SATA III = 6Gbps，約 600MB/s',example:'一般桌機 HDD/SSD 大多用 SATA 接口',keyword:'硬碟,接口,速度',related:['NVMe','AHCI','HDD']},
+{id:'b17',en:'PCIe',zh:'高速擴充接口',cat:'bios',lvl:2,cause:'Peripheral Component Interconnect Express，主機板高速擴充匯流排',fix:'顯示卡、NVMe SSD、網路卡都用 PCIe',example:'NVMe SSD 插在 PCIe x4 插槽才能發揮速度',keyword:'接口,擴充,速度',related:['NVMe','GPU','network card']},
+{id:'b18',en:'IPMI',zh:'遠端管理介面（帶外管理）',cat:'bios',lvl:2,cause:'Intelligent Platform Management Interface，獨立的遠端管理晶片',fix:'透過 IPMI IP 存取，可以遠端開關機和看畫面',example:'Server 當機後透過 IPMI 遠端重開機',keyword:'遠端管理,帶外,Server',related:['iDRAC','iLO','BMC']},
+{id:'b19',en:'iDRAC',zh:'Dell 的遠端管理介面',cat:'bios',lvl:2,cause:'integrated Dell Remote Access Controller，Dell Server 的帶外管理',fix:'透過 Web 介面或 SSH 連線 iDRAC IP',example:'iDRAC 可以看到 Server 的實體畫面，遠端開機裝系統',keyword:'Dell,遠端管理,Server',related:['IPMI','iLO','BMC']},
+{id:'b20',en:'iLO',zh:'HP/HPE 的遠端管理介面',cat:'bios',lvl:2,cause:'Integrated Lights-Out，HP/HPE Server 的帶外管理',fix:'iLO 4/iLO 5 透過 Web 介面管理',example:'HPE Server 透過 iLO 遠端查看 POST 畫面',keyword:'HP,HPE,遠端管理',related:['IPMI','iDRAC','BMC']},
+{id:'b21',en:'fan speed',zh:'風扇轉速',cat:'bios',lvl:1,cause:'系統風扇的轉速設定，影響散熱和噪音',fix:'BIOS Hardware Monitor 查看，可設定散熱策略',example:'Server 溫度異常，先在 BIOS 確認風扇轉速正常',keyword:'散熱,風扇,溫度',related:['temperature','BIOS','cooling']},
+{id:'b22',en:'CPU temperature',zh:'CPU 溫度',cat:'bios',lvl:1,cause:'CPU 目前的工作溫度',fix:'BIOS Hardware Monitor 查看，Linux 用 sensors',example:'CPU 溫度超過 90°C 要確認散熱和風扇',keyword:'溫度,散熱,監控',related:['fan speed','thermal','cooling']},
+{id:'b23',en:'TPM',zh:'信任平台模組',cat:'bios',lvl:2,cause:'Trusted Platform Module，硬體安全晶片，儲存加密金鑰',fix:'Windows 11 需要 TPM 2.0，BIOS 要開啟',example:'BitLocker 磁碟加密用 TPM 儲存金鑰',keyword:'安全,加密,Windows 11',related:['BIOS','Secure Boot','BitLocker']},
+{id:'b24',en:'wake on LAN',zh:'網路喚醒（遠端開機）',cat:'bios',lvl:2,cause:'透過特殊網路封包遠端喚醒已關機的電腦',fix:'BIOS 開啟 Wake on LAN，發送 Magic Packet',example:'下班後關機，明早遠端辦公前用 WoL 開機',keyword:'遠端,開機,網路',related:['BIOS','IPMI','remote']},
+{id:'b25',en:'virtualization technology',zh:'CPU 虛擬化技術（VT-x/AMD-V）',cat:'bios',lvl:1,cause:'CPU 提供的硬體虛擬化支援，跑 VM 必備',fix:'BIOS → Advanced → CPU → Virtualization Technology → Enable',example:'Proxmox 安裝好但無法建 VM，確認 VT-x 是否開啟',keyword:'虛擬化,CPU,必開',related:['BIOS','VMware','KVM']},
+{id:'b26',en:'BIOS update / flash',zh:'BIOS 更新/刷新',cat:'bios',lvl:2,cause:'更新主機板韌體，修復 bug 或新增功能',fix:'從官網下載對應版本，用隨身碟更新，過程中絕不能斷電',example:'新 CPU 不支援舊 BIOS，更新韌體後才能識別',keyword:'更新,韌體,風險',related:['BIOS','firmware','UEFI']},
+{id:'b27',en:'memory slot',zh:'記憶體插槽',cat:'bios',lvl:1,cause:'主機板上安裝 RAM 的插槽',fix:'多插槽要配對安裝（雙通道），通常插A2+B2',example:'新買的 RAM 裝到 A1+A2 沒有雙通道，改插 A2+B2',keyword:'記憶體,插槽,雙通道',related:['RAM','dual channel','BIOS']},
+{id:'b28',en:'dual channel',zh:'雙通道記憶體',cat:'bios',lvl:2,cause:'兩條 RAM 配對安裝，頻寬加倍',fix:'插在不同顏色的插槽（通常 A2+B2）',example:'雙通道比單通道記憶體效能約提升 5-15%',keyword:'記憶體,效能,配對',related:['memory slot','RAM','BIOS']},
+{id:'b29',en:'overclocking',zh:'超頻',cat:'bios',lvl:3,cause:'提高 CPU/記憶體的運作頻率超過額定值',fix:'BIOS → AI Tweaker（ASUS）或類似選單，調整倍頻',example:'遊戲電腦超頻 CPU 提升效能，但會增加散熱需求',keyword:'超頻,CPU,效能',related:['BIOS','CPU','cooling']},
+{id:'b30',en:'power supply',zh:'電源供應器',cat:'bios',lvl:1,cause:'把 AC 電源轉換為 DC，提供穩定電力給各元件',fix:'伺服器通常有備援電源（Redundant PSU）',example:'PSU 瓦數不夠導致 Server 隨機重啟',keyword:'電源,瓦數,備援',related:['BIOS','redundant','hardware']},
+{id:'b31',en:'HDD',zh:'傳統機械硬碟',cat:'bios',lvl:1,cause:'Hard Disk Drive，使用磁盤存儲資料',fix:'比 SSD 便宜，適合大容量儲存，速度較慢',example:'NAS 用 HDD 存大量資料，成本低',keyword:'硬碟,機械,慢',related:['SSD','NVMe','RAID']},
+{id:'b32',en:'SSD',zh:'固態硬碟',cat:'bios',lvl:1,cause:'Solid State Drive，使用快閃記憶體，比 HDD 快',fix:'系統碟用 SSD，資料碟看需求',example:'換 SSD 後開機速度從 2 分鐘縮到 15 秒',keyword:'快速,快閃,效能',related:['HDD','NVMe','SATA']},
+{id:'b33',en:'UPS',zh:'不斷電系統',cat:'bios',lvl:1,cause:'Uninterruptible Power Supply，停電時維持供電',fix:'SNMP 介接監控，電量不足時自動關機',example:'停電 UPS 提供緩衝時間讓 Server 正常關機',keyword:'停電,備援,電源',related:['power supply','BIOS','server']},
+{id:'b34',en:'CMOS battery',zh:'CMOS 電池（主機板紐扣電池）',cat:'bios',lvl:1,cause:'維持 BIOS 設定和時鐘，電池沒電會遺失設定',fix:'CR2032 紐扣電池，一般3-5年換一次',example:'Server 開機顯示日期時間跑掉，通常是 CMOS 電池沒電',keyword:'電池,BIOS,時鐘',related:['BIOS','RTC','CMOS']},
+{id:'b35',en:'POST error',zh:'POST 開機檢測錯誤',cat:'bios',lvl:2,cause:'開機自我檢測發現硬體問題',fix:'查 beep code 說明書，1長2短通常是顯示卡',example:'開機只聽到嗶嗶聲，看說明書判斷是哪個硬體',keyword:'開機,嗶聲,硬體',related:['POST','BIOS','beep code']},
+{id:'b36',en:'SMART',zh:'硬碟健康監測技術',cat:'bios',lvl:2,cause:'Self-Monitoring, Analysis and Reporting Technology，監測硬碟健康',fix:'smartctl -a /dev/sda 查看 SMART 資料',example:'SMART 顯示 Reallocated Sectors 增加，硬碟快壞了',keyword:'硬碟健康,監測,預警',related:['HDD','SSD','smartctl']},
+{id:'b37',en:'RAID controller',zh:'RAID 控制卡',cat:'bios',lvl:2,cause:'硬體 RAID 控制器，比軟體 RAID 效能更好',fix:'有 BIOS 可以設定，管理工具因品牌而異',example:'Dell PERC、HPE Smart Array 都是 RAID 控制卡',keyword:'硬體RAID,控制器,Server',related:['RAID','BIOS','hardware']},
+{id:'b38',en:'HBA',zh:'主機匯流排介面卡',cat:'bios',lvl:3,cause:'Host Bus Adapter，連接主機和儲存設備的介面卡',fix:'SAS HBA 連接外部磁碟陣列，FC HBA 連接 SAN',example:'連接 SAN 儲存設備需要光纖 HBA 卡',keyword:'儲存,SAN,介面',related:['SAN','SCSI','RAID']},
+{id:'b39',en:'network card',zh:'網路卡',cat:'bios',lvl:1,cause:'連接電腦到網路的硬體介面',fix:'lspci | grep Ethernet 查看，ethtool 查速度',example:'NIC 顯示 100Mbps 但應該是 1Gbps，確認接線',keyword:'網路,介面,速度',related:['MAC address','ethtool','NIC']},
+{id:'b40',en:'IPMI SOL',zh:'IPMI 串列輸出（遠端BIOS畫面）',cat:'bios',lvl:3,cause:'Serial Over LAN，透過 IPMI 看到 BIOS/OS 的文字輸出',fix:'ipmitool -I lanplus -H IP sol activate',example:'沒有顯示器的 Server 用 SOL 看開機過程',keyword:'遠端,BIOS,文字',related:['IPMI','iDRAC','iLO']},
+];
+// ===================== COMMANDS =====================
+const DEFAULT_COMMANDS = [
+  {cat:'disk',code:'df -h',desc:'查看磁碟使用狀況'},
+  {cat:'disk',code:'du -sh /*',desc:'找出根目錄下最大的資料夾'},
+  {cat:'disk',code:'du -sh /var/log/*',desc:'查看各 log 檔大小'},
+  {cat:'disk',code:'lsblk',desc:'列出所有磁碟裝置'},
+  {cat:'disk',code:'fdisk -l',desc:'查看磁碟分割資訊'},
+  {cat:'service',code:'systemctl status <服務>',desc:'查看服務狀態'},
+  {cat:'service',code:'systemctl restart <服務>',desc:'重啟服務'},
+  {cat:'service',code:'systemctl enable <服務>',desc:'設定服務開機自動啟動'},
+  {cat:'service',code:'systemctl disable <服務>',desc:'取消服務開機自動啟動'},
+  {cat:'service',code:'journalctl -xe',desc:'查看最新系統錯誤日誌'},
+  {cat:'service',code:'journalctl -u <服務> -f',desc:'即時監看特定服務日誌'},
+  {cat:'service',code:'journalctl -u <服務> --since "1 hour ago"',desc:'查看服務近1小時日誌'},
+  {cat:'network',code:'ip addr show',desc:'查看所有網路介面 IP'},
+  {cat:'network',code:'ss -tlnp',desc:'查看所有監聽中的 port'},
+  {cat:'network',code:'ping -c 4 8.8.8.8',desc:'測試網路連通性'},
+  {cat:'network',code:'nslookup <網域>',desc:'查詢 DNS 解析'},
+  {cat:'network',code:'curl -I http://localhost',desc:'測試 HTTP 回應標頭'},
+  {cat:'network',code:'traceroute <目標IP>',desc:'追蹤網路路由路徑'},
+  {cat:'perm',code:'sudo chmod 755 <檔案>',desc:'設定檔案為可執行權限'},
+  {cat:'perm',code:'sudo chmod 644 <檔案>',desc:'設定檔案為一般讀寫權限'},
+  {cat:'perm',code:'sudo chown -R www-data:www-data <目錄>',desc:'改變目錄擁有者為 www-data'},
+  {cat:'perm',code:'ls -la <目錄>',desc:'查看目錄內所有檔案權限'},
+  {cat:'docker',code:'docker ps',desc:'列出執行中的容器'},
+  {cat:'docker',code:'docker ps -a',desc:'列出所有容器（含停止的）'},
+  {cat:'docker',code:'docker logs -f <容器名>',desc:'即時查看容器日誌'},
+  {cat:'docker',code:'docker exec -it <容器名> bash',desc:'進入容器的 Bash'},
+  {cat:'docker',code:'docker restart <容器名>',desc:'重啟容器'},
+  {cat:'docker',code:'docker system prune',desc:'清理未使用的 Docker 資源'},
+  {cat:'docker',code:'docker stats',desc:'查看容器資源使用量'},
+  {cat:'docker',code:'docker compose up -d',desc:'背景啟動 compose 服務'},
+  {cat:'docker',code:'docker compose down',desc:'停止並移除 compose 服務'},
+];
+
+const CMD_CAT_NAMES = {
+  disk:'💽 磁碟管理',
+  service:'⚙️ 服務管理',
+  network:'🌐 網路診斷',
+  perm:'🔐 權限管理',
+  docker:'🐳 Docker',
+  custom:'⭐ 自訂'
+};
+
+// ===================== STATE =====================
+function getState(){try{return JSON.parse(localStorage.getItem('mis_state')||'{}')}catch{return{}}}
+function saveState(s){localStorage.setItem('mis_state',JSON.stringify(s))}
+function getS(k,d){const s=getState();return s[k]!==undefined?s[k]:d}
+function setS(k,v){const s=getState();s[k]=v;saveState(s)}
+
+let vocabFilter={cat:'all',lvl:'all'};
+let allVocab=[...VOCAB_DATA];
+let customCommands=[];
+
+function loadCustomData(){
+  const cc=getS('customVocab',[]);
+  allVocab=[...VOCAB_DATA,...cc];
+  customCommands=getS('customCommands',[]);
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded',()=>{
+  loadCustomData();
+  checkReminder();
+  renderHome();
+  renderVocab();
+  renderCommands();
+  renderPath('beginner');
+  renderJournal();
+  renderStats();
+  markDailyOpen();
+  const s=getStreak();
+  document.getElementById('streakNum').textContent=s;
+});
+
+// ===================== PAGES =====================
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const tabs=document.querySelectorAll('.tab');
+  const tabMap={home:0,vocab:1,emergency:2,quiz:3,commands:4,path:5,journal:6,stats:7};
+  if(tabMap[id]!==undefined) tabs[tabMap[id]].classList.add('active');
+  if(id==='stats') renderStats();
+  markDailyOpen();
+}
+
+// ===================== STREAK =====================
+function todayStr(){return new Date().toISOString().split('T')[0]}
+function getStreak(){
+  const today=todayStr();
+  const history=getS('openHistory',[]);
+  if(!history.includes(today)) return getS('streak',0);
+  let streak=1;
+  const d=new Date();
+  while(true){
+    d.setDate(d.getDate()-1);
+    if(!history.includes(d.toISOString().split('T')[0])) break;
+    streak++;
+  }
+  return streak;
+}
+function markDailyOpen(){
+  const today=todayStr();
+  const history=getS('openHistory',[]);
+  if(!history.includes(today)){
+    history.push(today);
+    if(history.length>200) history.splice(0,100);
+    setS('openHistory',history);
+    const streak=getStreak();
+    setS('streak',streak);
+    document.getElementById('streakNum').textContent=streak;
+  }
+}
+
+// ===================== REMINDER =====================
+function checkReminder(){
+  const history=getS('openHistory',[]);
+  if(!history.length) return;
+  const streak=getStreak();
+  if(streak===0){
+    const last=new Date(history[history.length-1]);
+    const diff=Math.floor((new Date()-last)/(1000*60*60*24));
+    if(diff>=2){
+      document.getElementById('reminderBanner').style.display='flex';
+      document.getElementById('reminderDays').textContent=diff;
+    }
+  }
+}
+
+// ===================== HOME =====================
+function renderHome(){
+  const learned=getS('learned',[]);
+  const wrongIds=getS('wrongIds',[]);
+  document.getElementById('streakNum').textContent=getS('streak',0);
+  document.getElementById('homeLearnedCount').textContent=learned.length;
+  document.getElementById('homeTotalCount').textContent=allVocab.length;
+  document.getElementById('homeWrongCount').textContent=wrongIds.length;
+  const today=todayStr();
+  const reviewMap=getS('reviewSchedule',{});
+  const dueToday=Object.entries(reviewMap).filter(([id,date])=>date<=today).map(([id])=>id);
+  document.getElementById('homeReviewCount').textContent=dueToday.length;
+  if(dueToday.length>0){
+    document.getElementById('reviewCard').style.display='block';
+    document.getElementById('reviewChip').textContent=dueToday.length+'個';
+    const items=dueToday.slice(0,3).map(id=>{
+      const v=allVocab.find(x=>x.id===id);
+      return v?`<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span class="mono" style="color:var(--accent)">${v.en}</span> — ${v.zh}</div>`:''
+    }).join('');
+    document.getElementById('reviewList').innerHTML=items+(dueToday.length>3?`<div style="font-size:12px;color:var(--text3);padding-top:6px">還有 ${dueToday.length-3} 個...</div>`:'');
+  }
+  const tasks=getS('tasks_'+today,{});
+  [1,2,3].forEach(i=>{
+    const el=document.getElementById('task'+i);
+    if(tasks[i]) el.classList.add('done'); else el.classList.remove('done');
+  });
+  checkTaskComplete(today);
+  renderRecommend();
+}
+
+function toggleTask(n){
+  const today=todayStr();
+  const tasks=getS('tasks_'+today,{});
+  tasks[n]=!tasks[n];
+  setS('tasks_'+today,tasks);
+  const el=document.getElementById('task'+n);
+  if(tasks[n]) el.classList.add('done'); else el.classList.remove('done');
+  checkTaskComplete(today);
+}
+function checkTaskComplete(today){
+  const tasks=getS('tasks_'+today,{});
+  const done=tasks[1]&&tasks[2]&&tasks[3];
+  document.getElementById('taskComplete').style.display=done?'block':'none';
+  document.querySelectorAll('.task-item').forEach(el=>el.style.display=done?'none':'flex');
+}
+
+function renderRecommend(){
+  const learned=getS('learned',[]);
+  const pool=allVocab.filter(v=>!learned.includes(v.id)).sort(()=>Math.random()-0.5).slice(0,4);
+  document.getElementById('todayRecommend').innerHTML=pool.length===0?
+    '<div style="text-align:center;color:var(--accent2);padding:16px">🎉 全部都學完了！</div>':
+    pool.map(v=>buildVocabCard(v,true)).join('');
+}
+function refreshRecommend(){
+  const learned=getS('learned',[]);
+  const pool=allVocab.filter(v=>!learned.includes(v.id)).sort(()=>Math.random()-0.5).slice(0,4);
+  document.getElementById('todayRecommend').innerHTML=pool.map(v=>buildVocabCard(v,true)).join('');
+}
+
+// ===================== VOCAB =====================
+function setFilter(type,val,el){
+  vocabFilter[type]=val;
+  if(el){
+    el.parentElement.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+  }
+  renderVocab();
+}
+function renderVocab(){
+  const q=(document.getElementById('vocabSearch')?.value||'').toLowerCase();
+  const learned=getS('learned',[]);
+  const wrongIds=getS('wrongIds',[]);
+  const today=todayStr();
+  const reviewMap=getS('reviewSchedule',{});
+  let items=allVocab;
+  if(vocabFilter.cat!=='all') items=items.filter(v=>v.cat===vocabFilter.cat);
+  if(vocabFilter.lvl==='1'||vocabFilter.lvl==='2'||vocabFilter.lvl==='3')
+    items=items.filter(v=>String(v.lvl)===vocabFilter.lvl);
+  else if(vocabFilter.lvl==='wrong') items=items.filter(v=>wrongIds.includes(v.id));
+  else if(vocabFilter.lvl==='review') items=items.filter(v=>reviewMap[v.id]&&reviewMap[v.id]<=today);
+  if(q) items=items.filter(v=>v.en.toLowerCase().includes(q)||v.zh.includes(q)||(v.keyword&&v.keyword.includes(q)));
+  const list=document.getElementById('vocabList');
+  if(!list) return;
+  list.innerHTML=items.length===0?
+    `<div class="empty-state"><div class="empty-icon">🔍</div><div>找不到符合的詞彙</div></div>`:
+    items.map(v=>buildVocabCard(v,false)).join('');
+}
+
+function buildVocabCard(v,compact){
+  const learned=getS('learned',[]);
+  const isLearned=learned.includes(v.id);
+  const lvlBadge=['','<span class="badge badge-1">⭐ 基礎</span>','<span class="badge badge-2">⭐⭐ 進階</span>','<span class="badge badge-3">⭐⭐⭐ 專業</span>'][v.lvl]||'';
+  const catNames={linux:'Linux',network:'網路/資安',docker:'Docker',cloud:'雲端',vmware:'VMware',bios:'BIOS',custom:'自訂'};
+  const catBadge=`<span style="font-size:10px;color:var(--text3);font-family:monospace">${catNames[v.cat]||v.cat}</span>`;
+  const related=v.related&&v.related.length?
+    `<div class="related-tags">${v.related.map(r=>`<span class="related-tag" onclick="searchRelated('${r.replace(/'/g,"\\'")}');event.stopPropagation()">${r}</span>`).join('')}</div>`:''
+  const detail=compact?'':`
+    <div class="vocab-detail" id="det_${v.id}">
+      ${v.cause?`<div class="detail-row"><div class="detail-label">原因/說明</div><div class="detail-val">${v.cause}</div></div>`:''}
+      ${v.fix?`<div class="detail-row"><div class="detail-label">解法/指令</div><code class="detail-cmd">${v.fix}</code><button class="copy-btn btn-sm" style="margin-top:6px" onclick="copyText('${v.fix.replace(/'/g,"\\'")}',this);event.stopPropagation()">複製</button></div>`:''}
+      ${v.example?`<div class="detail-row"><div class="detail-label">工作情境</div><div class="detail-val">${v.example}</div></div>`:''}
+      ${v.keyword?`<div class="detail-row"><div class="detail-label">記憶關鍵字</div><div class="detail-val" style="color:var(--accent2)">${v.keyword}</div></div>`:''}
+      ${related?`<div class="detail-row"><div class="detail-label">相關詞彙</div>${related}</div>`:''}
+      <div class="vocab-actions">
+        <button class="btn btn-sm btn-success" onclick="markLearned('${v.id}',event)">${isLearned?'✅ 已學會':'標記已學會'}</button>
+        <button class="btn btn-sm btn-ghost" onclick="speak('${v.en.replace(/'/g,"\\'")}',event)">🔊 發音</button>
+        <button class="btn btn-sm btn-ghost" onclick="addToJournalFromVocab('${v.id}',event)">📝 記錄日誌</button>
+      </div>
+    </div>`;
+  return `<div class="vocab-card${isLearned?' learned':''}" onclick="toggleDetail('${v.id}')">
+    <div class="vocab-header">
+      <div><div class="vocab-en">${v.en}</div><div class="vocab-zh">${v.zh}</div></div>
+      <button class="speak-btn" onclick="speak('${v.en.replace(/'/g,"\\'")}',event)">🔊</button>
+    </div>
+    <div class="vocab-meta">${lvlBadge}${catBadge}</div>
+    ${detail}
+  </div>`;
+}
+
+function toggleDetail(id){
+  const el=document.getElementById('det_'+id);
+  if(!el) return;
+  el.classList.toggle('open');
+}
+function markLearned(id,e){
+  if(e) e.stopPropagation();
+  const learned=getS('learned',[]);
+  if(!learned.includes(id)){
+    learned.push(id);
+    setS('learned',learned);
+    const schedule=getS('reviewSchedule',{});
+    const tomorrow=new Date();
+    tomorrow.setDate(tomorrow.getDate()+1);
+    schedule[id]=tomorrow.toISOString().split('T')[0];
+    setS('reviewSchedule',schedule);
+    toast('✅ 已標記學會，明天提醒複習！');
+    renderHome();
+    renderVocab();
+  } else {
+    toast('已經標記過了！');
+  }
+}
+function searchRelated(term){
+  document.getElementById('vocabSearch').value=term;
+  vocabFilter.cat='all';vocabFilter.lvl='all';
+  document.querySelectorAll('.filter-scroll .filter-btn').forEach((b,i)=>{
+    if(i===0) b.classList.add('active'); else b.classList.remove('active');
+  });
+  renderVocab();
+  showPage('vocab');
+}
+function speak(text,e){
+  if(e) e.stopPropagation();
+  if('speechSynthesis' in window){
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US';u.rate=0.85;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+    toast('🔊 '+text);
+  } else {
+    toast('⚠️ 瀏覽器不支援語音');
+  }
+}
+
+// ===================== MODALS =====================
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function closeModalOutside(e,id){if(e.target===document.getElementById(id))closeModal(id)}
+function saveCustomVocab(){
+  const en=document.getElementById('av_en').value.trim();
+  const zh=document.getElementById('av_zh').value.trim();
+  if(!en||!zh){toast('英文和中文意思為必填');return;}
+  const v={id:'c'+Date.now(),en,zh,cat:document.getElementById('av_cat').value,lvl:parseInt(document.getElementById('av_lvl').value),cause:document.getElementById('av_cause').value,fix:document.getElementById('av_fix').value,example:document.getElementById('av_example').value,keyword:document.getElementById('av_keyword').value,related:[]};
+  const cc=getS('customVocab',[]);cc.push(v);setS('customVocab',cc);
+  loadCustomData();renderVocab();
+  closeModal('addVocabModal');toast('✅ 已新增：'+en);
+  ['av_en','av_zh','av_cause','av_fix','av_example','av_keyword'].forEach(id=>document.getElementById(id).value='');
+}
+
+// ===================== EMERGENCY =====================
+function searchEmergency(){
+  const q=document.getElementById('erSearch').value.toLowerCase().trim();
+  const container=document.getElementById('erResults');
+  if(!q){container.innerHTML='';return;}
+  const results=allVocab.filter(v=>
+    v.en.toLowerCase().includes(q)||
+    (v.cause&&v.cause.toLowerCase().includes(q))||
+    (v.keyword&&v.keyword.toLowerCase().includes(q))
+  ).slice(0,5);
+  if(!results.length){
+    container.innerHTML=`<div class="alert alert-info">找不到「${q}」，試試用英文關鍵字，或點下方問 Claude</div>`;
+    return;
+  }
+  container.innerHTML=results.map(v=>`
+    <div class="er-card">
+      <div class="er-error">${v.en}</div>
+      <div style="margin-bottom:8px"><div class="er-label">中文意思</div><div class="er-value">${v.zh}</div></div>
+      ${v.cause?`<div style="margin-bottom:8px"><div class="er-label">原因</div><div class="er-value">${v.cause}</div></div>`:''}
+      ${v.fix?`<div style="margin-bottom:8px"><div class="er-label">解法</div><code style="font-family:monospace;font-size:12px;background:var(--bg3);padding:6px 10px;border-radius:6px;color:var(--accent2);display:block;margin-top:4px;word-break:break-all">${v.fix}</code>
+        <button class="copy-btn" style="margin-top:6px" onclick="copyText('${v.fix.replace(/'/g,"\\'")}',this)">複製指令</button></div>`:''}
+      ${v.example?`<div><div class="er-label">情境</div><div class="er-value">${v.example}</div></div>`:''}
+    </div>`).join('');
+}
+function openClaude(){
+  const q=document.getElementById('erSearch').value;
+  const prompt=q?`幫我解析這個錯誤訊息：${q}\n\n請用以下格式回答：\n【錯誤/術語】\n【中文意思】\n【發生原因】\n【解決步驟】\n【記憶關鍵字】`:'';
+  const url='https://claude.ai/new'+(prompt?'?q='+encodeURIComponent(prompt):'');
+  window.open(url,'_blank');
+}
+function copyText(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    const orig=btn.textContent;
+    btn.textContent='已複製 ✓';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent=orig;btn.classList.remove('copied')},2000);
+  }).catch(()=>{
+    toast('複製失敗，請手動複製');
+  });
+}
+
+// ===================== QUIZ =====================
+let quizState=null;
+function startQuiz(mode){
+  const wrongIds=getS('wrongIds',[]);
+  let pool;
+  if(mode==='wrong'){
+    pool=allVocab.filter(v=>wrongIds.includes(v.id));
+    if(!pool.length){toast('錯題本是空的！先做測驗再累積錯題 😊');return;}
+  } else {
+    pool=allVocab.slice();
+  }
+  pool=pool.sort(()=>Math.random()-0.5).slice(0,5);
+  quizState={mode:mode==='wrong'?'mc':mode,pool,idx:0,score:0,total:pool.length};
+  renderQuiz();
+  const today=todayStr();
+  const tasks=getS('tasks_'+today,{});tasks[2]=true;setS('tasks_'+today,tasks);
+  document.getElementById('task2')?.classList.add('done');
+  checkTaskComplete(today);
+}
+function startReviewQuiz(){
+  const schedule=getS('reviewSchedule',{});
+  const today=todayStr();
+  const dueIds=Object.entries(schedule).filter(([id,date])=>date<=today).map(([id])=>id);
+  const pool=allVocab.filter(v=>dueIds.includes(v.id)).sort(()=>Math.random()-0.5).slice(0,5);
+  if(!pool.length){toast('今天沒有複習項目');return;}
+  quizState={mode:'mc',pool,idx:0,score:0,total:pool.length,isReview:true};
+  renderQuiz();
+}
+function renderQuiz(){
+  const qa=document.getElementById('quizArea');
+  if(!quizState){
+    qa.innerHTML=`<div class="empty-state"><div class="empty-icon">🎯</div><div style="color:var(--text2);margin-top:8px">選擇測驗模式開始</div></div>`;
+    return;
+  }
+  const {mode,pool,idx,total}=quizState;
+  if(idx>=total){showScore();return;}
+  const v=pool[idx];
+  const prog=Math.round((idx/total)*100);
+  const progBar=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><div style="flex:1;height:4px;background:var(--bg3);border-radius:2px"><div style="height:100%;width:${prog}%;background:var(--accent);border-radius:2px;transition:width .4s"></div></div><span style="font-size:12px;color:var(--text3)">${idx+1}/${total}</span></div>`;
+  if(mode==='mc'){
+    const others=allVocab.filter(x=>x.id!==v.id&&x.cat===v.cat).sort(()=>Math.random()-0.5).slice(0,2);
+    const extra=allVocab.filter(x=>x.id!==v.id&&!others.find(o=>o.id===x.id)).sort(()=>Math.random()-0.5).slice(0,1);
+    const options=[...others,...extra,v].sort(()=>Math.random()-0.5);
+    qa.innerHTML=`${progBar}
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px">這個英文的中文意思是？</div>
+      <div class="quiz-en" style="margin-bottom:20px">${v.en}</div>
+      ${options.map(o=>`<div class="quiz-option" onclick="answerMC('${v.id}','${o.id}','${v.en.replace(/'/g,"\\'")}',this)">${o.zh}</div>`).join('')}
+      <div id="qfb"></div>`;
+  } else {
+    qa.innerHTML=`${progBar}
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px">填入正確的英文（可以只填關鍵字）</div>
+      <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px">${v.zh}</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:16px">💡 ${v.keyword}</div>
+      <div class="fill-area">
+        <input class="input" id="fillAnswer" placeholder="輸入英文..." style="font-family:monospace;font-size:15px" onkeydown="if(event.key==='Enter')answerFill('${v.id}','${v.en.replace(/'/g,"\\'")}')">
+        <button class="btn btn-primary btn-full" onclick="answerFill('${v.id}','${v.en.replace(/'/g,"\\'")}')">確認答案</button>
+      </div>
+      <div id="qfb"></div>`;
+    setTimeout(()=>document.getElementById('fillAnswer')?.focus(),100);
+  }
+}
+function answerMC(correctId,selectedId,en,clickedEl){
+  const correct=correctId===selectedId;
+  document.querySelectorAll('.quiz-option').forEach(o=>{o.onclick=null;o.classList.add('disabled')});
+  const v=allVocab.find(x=>x.id===correctId);
+  const sv=allVocab.find(x=>x.id===selectedId);
+  document.querySelectorAll('.quiz-option').forEach(o=>{
+    if(o.textContent===v.zh) o.classList.add('correct');
+    else if(o.textContent===sv?.zh&&!correct) o.classList.add('wrong');
+  });
+  processAnswer(correct,correctId,en);
+}
+function answerFill(correctId,correctEn){
+  const input=document.getElementById('fillAnswer');
+  const answer=input.value.trim().toLowerCase();
+  const correct=answer.length>1&&(correctEn.toLowerCase().includes(answer)||answer.includes(correctEn.toLowerCase().split(' ')[0]));
+  processAnswer(correct,correctId,correctEn);
+}
+function processAnswer(correct,id,en){
+  if(correct) quizState.score++;
+  const v=allVocab.find(x=>x.id===id);
+  const wrongIds=getS('wrongIds',[]);
+  const wrongCount=getS('wrongCount',{});
+  const rightCount=getS('rightCount',{});
+  if(correct){
+    rightCount[id]=(rightCount[id]||0)+1;
+    if(rightCount[id]>=3&&wrongIds.includes(id)) wrongIds.splice(wrongIds.indexOf(id),1);
+    const schedule=getS('reviewSchedule',{});
+    if(schedule[id]){
+      const next=new Date();
+      const days=[1,3,7,14,30];
+      const currentIdx=days.indexOf(7);
+      next.setDate(next.getDate()+(days[Math.min(currentIdx+1,days.length-1)]));
+      schedule[id]=next.toISOString().split('T')[0];
+      setS('reviewSchedule',schedule);
+    }
+  } else {
+    if(!wrongIds.includes(id)) wrongIds.push(id);
+    wrongCount[id]=(wrongCount[id]||0)+1;
+  }
+  setS('wrongIds',wrongIds);setS('wrongCount',wrongCount);setS('rightCount',rightCount);
+  const fb=document.getElementById('qfb');
+  fb.innerHTML=`<div class="quiz-feedback ${correct?'right':'wrong'}" style="margin-top:16px">
+    ${correct?'✅ 答對了！':'❌ 答錯了！正確答案：<strong>'+en+'</strong>'}
+    ${v?`<div style="margin-top:4px;font-size:12px">${v.zh} — ${v.cause||''}</div>`:''}
+  </div>
+  <button class="btn btn-primary btn-full" onclick="nextQuiz()" style="margin-top:12px">${quizState.idx+1>=quizState.total?'查看成績':'下一題 →'}</button>`;
+}
+function nextQuiz(){quizState.idx++;renderQuiz();}
+function showScore(){
+  const {score,total}=quizState;
+  const pct=Math.round(score/total*100);
+  const scores=getS('quizScores',[]);
+  scores.push({date:todayStr(),score,total,pct});
+  if(scores.length>50) scores.splice(0,10);
+  setS('quizScores',scores);
+  document.getElementById('quizArea').innerHTML=`
+    <div class="score-display">
+      <div class="score-num">${pct}%</div>
+      <div class="score-label">${score} / ${total} 答對</div>
+      <div class="score-detail">${pct>=80?'🎉 表現優秀！':pct>=60?'💪 繼續加油！':'📖 多複習幾次吧！'}</div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="startQuiz('mc')" style="margin-bottom:10px">再來一次（四選一）</button>
+    <button class="btn btn-ghost btn-full" onclick="startQuiz('fill')">填空模式</button>
+    ${getS('wrongIds',[]).length?`<button class="btn btn-danger btn-full" onclick="startQuiz('wrong')" style="margin-top:10px">❌ 練習錯題 (${getS('wrongIds',[]).length}題)</button>`:''}`;
+  quizState=null;
+}
+
+// ===================== COMMANDS =====================
+function renderCommands(){
+  const allCmds=[...DEFAULT_COMMANDS,...customCommands];
+  const cats={};
+  allCmds.forEach(c=>{if(!cats[c.cat])cats[c.cat]=[];cats[c.cat].push(c);});
+  let html='';
+  Object.entries(cats).forEach(([cat,cmds])=>{
+    html+=`<div class="section-title">${CMD_CAT_NAMES[cat]||cat}</div>`;
+    cmds.forEach(c=>{
+      html+=`<div class="cmd-card">
+        <div class="cmd-line">
+          <span class="cmd-code">${c.code}</span>
+          <button class="copy-btn" onclick="copyText('${c.code.replace(/'/g,"\\'")}',this)">複製</button>
+        </div>
+        <div class="cmd-desc">${c.desc}</div>
+      </div>`;
+    });
+  });
+  document.getElementById('cmdCats').innerHTML=html;
+}
+function saveCmd(){
+  const code=document.getElementById('cmd_code').value.trim();
+  const desc=document.getElementById('cmd_desc').value.trim();
+  if(!code){toast('指令不能為空');return;}
+  customCommands.push({cat:document.getElementById('cmd_cat').value,code,desc});
+  setS('customCommands',customCommands);
+  renderCommands();closeModal('addCmdModal');toast('✅ 已新增指令');
+  document.getElementById('cmd_code').value='';document.getElementById('cmd_desc').value='';
+}
+
+// ===================== PATH =====================
+const PATHS={
+  beginner:[
+    {title:'第一階段：Linux 基礎（必學）',words:['l01','l02','l03','l04','l05','l15','l16','l17','l18','l20','l29','l30','l31','l39','l40','l51','l52','l53','l54','l55'],desc:'最常遇到的錯誤訊息和基礎指令，新人從這裡開始'},
+    {title:'第二階段：網路基礎',words:['n01','n02','n03','n04','n07','n08','n09','n19','n20','n23','n27','n34','n40','n41','n43','n44'],desc:'連線、防火牆、SSH、DNS，MIS日常網路排故'},
+    {title:'第三階段：系統管理',words:['l11','l12','l13','l14','l19','l21','l22','l23','l24','l25','l26','l27','l28','l32'],desc:'服務管理、磁碟、排程，讓 Server 穩定運行'},
+    {title:'第四階段：虛擬化入門',words:['v01','v02','v03','v04','v05','v06','v07','v08','v18','v25','v35','v36','v37','v38'],desc:'VMware 基礎操作，公司 VM 環境必備'},
+  ],
+  mis:[
+    {title:'緊急應對（今天就要學）',words:['l01','l04','l05','l09','l10','l11','l12','n34','n04'],desc:'最常被 call 去處理的問題，學這幾個先度過難關'},
+    {title:'Server 日常維護',words:['l15','l16','l17','l18','l31','l32','l39','l40','l49','l50'],desc:'每週維護 Server 必用，df/du/htop 是好朋友'},
+    {title:'帳號和權限管理',words:['l13','l14','l39','n55','n57','n58','n59'],desc:'員工帳號管理、SSH 安全設定'},
+    {title:'備份和災難復原',words:['l21','l22','l19','c32','c33','v01','c34'],desc:'沒備份的不算MIS，這幾個要搞懂'},
+  ]
+};
+function showPath(type,el){
+  if(el){
+    document.querySelectorAll('#page-path .filter-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+  }
+  renderPath(type);
+}
+function renderPath(type){
+  const stages=PATHS[type];
+  const learned=getS('learned',[]);
+  let html='';
+  stages.forEach((stage)=>{
+    const done=stage.words.filter(id=>learned.includes(id)).length;
+    const total=stage.words.length;
+    const pct=Math.round(done/total*100);
+    const isCurrent=pct>0&&pct<100;
+    html+=`<div class="path-stage ${pct===100?'done':''}${isCurrent?' current':''}">
+      <div class="path-stage-title">${pct===100?'✅':isCurrent?'▶️':'○'} ${stage.title}</div>
+      <div class="path-stage-sub">${stage.desc}</div>
+      <div style="margin-top:10px">
+        <div class="progress-label"><span>${done}/${total} 已學會</span><span>${pct}%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      ${pct<100?`<button class="btn btn-ghost btn-sm" onclick="studyStage(${JSON.stringify(stage.words)})" style="margin-top:10px">學習這個階段</button>`:''}
+    </div>`;
+  });
+  document.getElementById('pathContent').innerHTML=html;
+}
+function studyStage(wordIds){
+  const items=allVocab.filter(v=>wordIds.includes(v.id));
+  document.getElementById('vocabList').innerHTML=items.map(v=>buildVocabCard(v,false)).join('');
+  document.getElementById('vocabSearch').value='';
+  showPage('vocab');
+}
+
+// ===================== JOURNAL =====================
+function renderJournal(){
+  const entries=getS('journal',[]).slice().reverse();
+  const list=document.getElementById('journalList');
+  if(!entries.length){
+    list.innerHTML=`<div class="empty-state"><div class="empty-icon">📝</div><div>還沒有記錄，遇到問題就記下來</div></div>`;
+    return;
+  }
+  list.innerHTML=entries.map(e=>`
+    <div class="journal-entry">
+      <div class="journal-date">${e.date} · ${e.type}</div>
+      <div class="journal-content"><strong>${e.problem}</strong>${e.solution?' — '+e.solution:''}</div>
+      ${e.keyword?`<div class="journal-kw">${e.keyword.split(',').map(k=>`<span>${k.trim()}</span>`).join('')}</div>`:''}
+    </div>`).join('');
+}
+function openAddJournal(){openModal('addJournalModal')}
+function addToJournalFromVocab(id,e){
+  if(e) e.stopPropagation();
+  const v=allVocab.find(x=>x.id===id);
+  if(!v) return;
+  document.getElementById('jn_problem').value=v.en;
+  document.getElementById('jn_solution').value=v.zh+(v.fix?' | '+v.fix:'');
+  document.getElementById('jn_keyword').value=v.keyword||'';
+  openModal('addJournalModal');
+}
+function saveJournal(){
+  const problem=document.getElementById('jn_problem').value.trim();
+  if(!problem){toast('問題/詞彙不能為空');return;}
+  const entry={date:todayStr(),type:document.getElementById('jn_type').value,problem,solution:document.getElementById('jn_solution').value,keyword:document.getElementById('jn_keyword').value};
+  const journal=getS('journal',[]);journal.push(entry);setS('journal',journal);
+  renderJournal();closeModal('addJournalModal');toast('✅ 已記錄');
+  ['jn_problem','jn_solution','jn_keyword'].forEach(id=>document.getElementById(id).value='');
+  const today=todayStr();
+  const tasks=getS('tasks_'+today,{});tasks[3]=true;setS('tasks_'+today,tasks);
+  document.getElementById('task3')?.classList.add('done');
+  checkTaskComplete(today);
+}
+
+// ===================== STATS =====================
+function renderStats(){
+  renderHeatmap();
+  renderCatProgress();
+  renderWeakness();
+  const scores=getS('quizScores',[]);
+  document.getElementById('statQuizCount').textContent=scores.length;
+  if(scores.length){
+    const avg=Math.round(scores.reduce((a,b)=>a+b.pct,0)/scores.length);
+    document.getElementById('statAvgScore').textContent=avg+'%';
+  }
+  const today=new Date();
+  const weekStart=new Date(today);weekStart.setDate(today.getDate()-6);
+  const weekStartStr=weekStart.toISOString().split('T')[0];
+  const history=getS('openHistory',[]);
+  document.getElementById('statWeekCount').textContent=history.filter(d=>d>=weekStartStr).length+'天';
+  document.getElementById('statCustomCount').textContent=getS('customVocab',[]).length;
+}
+function renderHeatmap(){
+  const history=getS('openHistory',[]);
+  const heatmap=document.getElementById('heatmap');
+  const months=document.getElementById('heatmapMonths');
+  const cells=[];const monthLabels=[];
+  const today=new Date();
+  const d=new Date(today);d.setDate(d.getDate()-90);
+  let lastMonth='';
+  for(let i=0;i<91;i++){
+    const str=d.toISOString().split('T')[0];
+    const m=d.toLocaleDateString('zh-TW',{month:'short'});
+    if(m!==lastMonth){monthLabels.push(m);lastMonth=m;}
+    const active=history.includes(str);
+    cells.push(`<div class="heatmap-cell${active?' l2':''}" title="${str}"></div>`);
+    d.setDate(d.getDate()+1);
+  }
+  heatmap.innerHTML=cells.join('');
+  months.innerHTML=monthLabels.slice(0,3).map(m=>`<span>${m}</span>`).join('');
+}
+function renderCatProgress(){
+  const learned=getS('learned',[]);
+  const cats={linux:'Linux/Server',network:'網路/資安',docker:'Docker',cloud:'雲端/DevOps',vmware:'VMware',bios:'BIOS/硬體'};
+  const colors={linux:'#00d4ff',network:'#00ff9d',docker:'#4a9eff',cloud:'#ff6b35',vmware:'#c084fc',bios:'#fbbf24'};
+  let html='';
+  Object.entries(cats).forEach(([cat,label])=>{
+    const total=allVocab.filter(v=>v.cat===cat).length;
+    const done=allVocab.filter(v=>v.cat===cat&&learned.includes(v.id)).length;
+    const pct=total?Math.round(done/total*100):0;
+    html+=`<div class="progress-wrap">
+      <div class="progress-label"><span>${label}</span><span>${done}/${total}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${colors[cat]}"></div></div>
+    </div>`;
+  });
+  document.getElementById('catProgress').innerHTML=html;
+}
+function renderWeakness(){
+  const wrongCount=getS('wrongCount',{});
+  const cats={linux:'Linux/Server',network:'網路/資安',docker:'Docker',cloud:'雲端/DevOps',vmware:'VMware',bios:'BIOS/硬體'};
+  const catWrong={};
+  Object.entries(cats).forEach(([cat])=>{
+    catWrong[cat]=allVocab.filter(v=>v.cat===cat).reduce((a,v)=>a+(wrongCount[v.id]||0),0);
+  });
+  const max=Math.max(...Object.values(catWrong),1);
+  const sorted=Object.entries(catWrong).sort((a,b)=>b[1]-a[1]);
+  const colors=['#ff4757','#ff6b35','#ffd700','#00d4ff','#00ff9d','#4a9eff'];
+  let html='';
+  sorted.forEach(([cat,count],i)=>{
+    const pct=Math.round(count/max*100);
+    html+=`<div class="weakness-row">
+      <div class="weakness-label">${cats[cat]}</div>
+      <div class="weakness-bar-wrap"><div class="weakness-bar" style="width:${pct}%;background:${colors[i]}"></div></div>
+      <div class="weakness-pct">${count}次</div>
+    </div>`;
+  });
+  document.getElementById('weaknessChart').innerHTML=html||'<div style="color:var(--text3);font-size:13px">還沒有測驗記錄</div>';
+}
+
+// ===================== TOAST =====================
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>
