@@ -1,0 +1,464 @@
+[
+  {
+    "id": "l01",
+    "en": "permission denied",
+    "zh": "沒有執行權限",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "當前使用者對該檔案或目錄沒有讀/寫/執行權限",
+    "fix": "sudo <指令> 或 chmod 755 <檔案>",
+    "example": "複製設定檔到 /etc 時出現，加 sudo 就解決了",
+    "keyword": "sudo,權限,chmod",
+    "related": [
+      "sudo",
+      "chmod",
+      "chown"
+    ]
+  },
+  {
+    "id": "l02",
+    "en": "command not found",
+    "zh": "指令不存在或未安裝",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "指令沒有安裝，或執行路徑不在 PATH 裡",
+    "fix": "which <指令> 確認路徑，或 sudo apt install <套件>",
+    "example": "剛裝好的 Ubuntu 執行 nginx 出現這個",
+    "keyword": "安裝,PATH,which",
+    "related": [
+      "which",
+      "apt",
+      "PATH"
+    ]
+  },
+  {
+    "id": "l03",
+    "en": "no such file or directory",
+    "zh": "檔案或目錄不存在",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "路徑打錯、檔案被刪除、或目錄尚未建立",
+    "fix": "ls 確認目錄內容，pwd 確認當前路徑",
+    "example": "cd 進入資料夾打錯路徑時常見",
+    "keyword": "路徑,ls,pwd",
+    "related": [
+      "ls",
+      "pwd",
+      "mkdir"
+    ]
+  },
+  {
+    "id": "l04",
+    "en": "connection refused",
+    "zh": "連線被拒絕（服務沒開或port錯）",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "目標服務未啟動、防火牆擋住、或port號錯誤",
+    "fix": "systemctl status <服務> 確認服務狀態",
+    "example": "SSH連不上Server，確認sshd是否啟動",
+    "keyword": "服務,port,防火牆",
+    "related": [
+      "systemctl",
+      "ufw",
+      "ss"
+    ]
+  },
+  {
+    "id": "l05",
+    "en": "no space left on device",
+    "zh": "磁碟空間已滿",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "磁碟分割區空間用完，無法再寫入任何資料",
+    "fix": "df -h 查看哪個分割區滿了，du -sh /* 找大檔",
+    "example": "寫log或上傳檔案突然失敗",
+    "keyword": "磁碟,df,du",
+    "related": [
+      "df",
+      "du",
+      "lsblk"
+    ]
+  },
+  {
+    "id": "l11",
+    "en": "systemctl",
+    "zh": "服務控制指令（啟動/停止/重啟）",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "Linux 服務管理工具，管理 systemd 服務",
+    "fix": "systemctl start/stop/restart/status <服務>",
+    "example": "systemctl restart nginx 重啟網頁服務",
+    "keyword": "服務,daemon,start,stop",
+    "related": [
+      "journalctl",
+      "service"
+    ]
+  },
+  {
+    "id": "l12",
+    "en": "journalctl",
+    "zh": "查看系統日誌",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "systemd 的日誌查詢工具",
+    "fix": "journalctl -xe 看最新錯誤，-u nginx 看特定服務",
+    "example": "服務起不來時第一個查這個",
+    "keyword": "log,日誌,錯誤追蹤",
+    "related": [
+      "systemctl",
+      "syslog"
+    ]
+  },
+  {
+    "id": "l13",
+    "en": "chmod",
+    "zh": "修改檔案權限",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "change mode，改變檔案或目錄的讀寫執行權限",
+    "fix": "chmod 755 <檔案> 或 chmod +x <腳本>",
+    "example": "chmod 755 deploy.sh 讓 script 可以執行",
+    "keyword": "權限,rwx,755,644",
+    "related": [
+      "chown",
+      "permission denied",
+      "ls -l"
+    ]
+  },
+  {
+    "id": "l15",
+    "en": "df -h",
+    "zh": "查看磁碟使用狀況（人類可讀格式）",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "disk free，顯示所有分割區的使用量",
+    "fix": "df -h 直接執行，看 Use% 那欄",
+    "example": "報 no space left 後先跑這個看哪個 /dev 滿了",
+    "keyword": "磁碟,空間,partition",
+    "related": [
+      "du",
+      "lsblk",
+      "no space left"
+    ]
+  },
+  {
+    "id": "l17",
+    "en": "grep",
+    "zh": "搜尋文字內容",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "在檔案或輸出中搜尋符合的文字行",
+    "fix": "grep 關鍵字 檔案 或 grep -r 關鍵字 目錄",
+    "example": "grep -n error /var/log/syslog 找 error 行",
+    "keyword": "搜尋,文字,filter",
+    "related": [
+      "cat",
+      "tail",
+      "awk"
+    ]
+  },
+  {
+    "id": "l20",
+    "en": "ssh",
+    "zh": "遠端安全連線工具",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "Secure Shell，加密的遠端登入協議",
+    "fix": "ssh user@ip 連線，-p 指定port，-i 指定私鑰",
+    "example": "ssh admin@192.168.1.100 連到遠端Server",
+    "keyword": "遠端,連線,金鑰",
+    "related": [
+      "scp",
+      "sftp",
+      "putty"
+    ]
+  },
+  {
+    "id": "l29",
+    "en": "ps aux",
+    "zh": "顯示所有執行中的程序",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "process status，列出所有使用者的程序",
+    "fix": "ps aux | grep nginx 過濾特定程序",
+    "example": "確認 nginx 有沒有在跑",
+    "keyword": "process,程序,PID",
+    "related": [
+      "top",
+      "htop",
+      "kill"
+    ]
+  },
+  {
+    "id": "l31",
+    "en": "top",
+    "zh": "即時系統資源監看",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "顯示 CPU、記憶體、程序使用情況",
+    "fix": "top 直接執行，q離開，k殺程序",
+    "example": "Server 很慢時先跑 top 看誰吃資源",
+    "keyword": "CPU,記憶體,效能",
+    "related": [
+      "htop",
+      "ps",
+      "vmstat"
+    ]
+  },
+  {
+    "id": "l39",
+    "en": "sudo",
+    "zh": "以管理員權限執行指令",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "superuser do，以 root 或其他使用者身份執行",
+    "fix": "在指令前加 sudo，或 sudo su 切換到 root",
+    "example": "sudo apt update 更新套件庫",
+    "keyword": "root,管理員,權限",
+    "related": [
+      "su",
+      "permission denied",
+      "visudo"
+    ]
+  },
+  {
+    "id": "l40",
+    "en": "apt",
+    "zh": "套件管理工具（Ubuntu/Debian）",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "Advanced Package Tool，安裝/更新/移除套件",
+    "fix": "sudo apt update && sudo apt install <套件>",
+    "example": "sudo apt install nginx 安裝網頁伺服器",
+    "keyword": "安裝,套件,更新",
+    "related": [
+      "apt-get",
+      "dpkg",
+      "snap"
+    ]
+  },
+  {
+    "id": "n01",
+    "en": "ping",
+    "zh": "測試網路連通性",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "發送 ICMP 封包測試目標主機是否可達",
+    "fix": "ping 192.168.1.1 測試，-c 4 只跑4個封包",
+    "example": "ping 8.8.8.8 確認能否連到 Google DNS",
+    "keyword": "ICMP,連通,測試",
+    "related": [
+      "traceroute",
+      "curl",
+      "mtr"
+    ]
+  },
+  {
+    "id": "n03",
+    "en": "ufw",
+    "zh": "Ubuntu 防火牆管理工具",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "Uncomplicated Firewall，簡化 iptables 操作",
+    "fix": "ufw allow 80/tcp 開放，ufw deny 22 封鎖，ufw status",
+    "example": "ufw allow 443/tcp 開放 HTTPS",
+    "keyword": "防火牆,ubuntu,規則",
+    "related": [
+      "iptables",
+      "firewall",
+      "port"
+    ]
+  },
+  {
+    "id": "n07",
+    "en": "SSH",
+    "zh": "安全遠端連線協議（port 22）",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "Secure Shell，加密的遠端登入通道",
+    "fix": "ssh user@ip，金鑰登入比密碼更安全",
+    "example": "IT 人員透過 SSH 遠端管理 Server",
+    "keyword": "遠端,連線,安全,22",
+    "related": [
+      "scp",
+      "sftp",
+      "putty"
+    ]
+  },
+  {
+    "id": "n08",
+    "en": "DNS",
+    "zh": "網域名稱系統（網址轉IP）",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "Domain Name System，把域名解析成 IP 位址",
+    "fix": "nslookup 或 dig 查詢 DNS 記錄",
+    "example": "DNS 解析失敗導致網頁打不開但 ping IP 通",
+    "keyword": "域名,解析,IP,A記錄",
+    "related": [
+      "nslookup",
+      "dig",
+      "hosts file"
+    ]
+  },
+  {
+    "id": "n19",
+    "en": "HTTP",
+    "zh": "超文本傳輸協定（網頁通訊）",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "HyperText Transfer Protocol，瀏覽器和伺服器溝通的協議",
+    "fix": "HTTP 狀態碼：200=成功 404=找不到 500=伺服器錯誤",
+    "example": "瀏覽器開網頁就是發 HTTP GET 請求",
+    "keyword": "網頁,請求,回應",
+    "related": [
+      "HTTPS",
+      "REST API",
+      "nginx"
+    ]
+  },
+  {
+    "id": "d01",
+    "en": "docker ps",
+    "zh": "列出執行中的容器",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "process status for docker，顯示容器清單",
+    "fix": "docker ps 只看執行中，docker ps -a 含已停止",
+    "example": "docker ps 確認 nginx 容器是否在跑",
+    "keyword": "容器,清單,狀態",
+    "related": [
+      "docker start",
+      "docker stop",
+      "docker logs"
+    ]
+  },
+  {
+    "id": "d03",
+    "en": "docker run",
+    "zh": "建立並執行容器",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "從 image 建立新容器並啟動",
+    "fix": "docker run -d -p 80:80 --name myapp nginx",
+    "example": "docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=pass mysql",
+    "keyword": "容器,啟動,建立",
+    "related": [
+      "docker start",
+      "docker stop",
+      "docker ps"
+    ]
+  },
+  {
+    "id": "d05",
+    "en": "docker logs",
+    "zh": "查看容器的日誌輸出",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "顯示容器的 stdout/stderr 輸出",
+    "fix": "docker logs 容器名，-f 即時跟蹤，--tail 100 看最後100行",
+    "example": "docker logs -f app 即時監看應用程式輸出",
+    "keyword": "日誌,log,除錯",
+    "related": [
+      "docker exec",
+      "journalctl"
+    ]
+  },
+  {
+    "id": "v01",
+    "en": "snapshot",
+    "zh": "虛擬機快照（還原點）",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "記錄 VM 在某一時刻的完整狀態",
+    "fix": "右鍵 VM → Snapshots → Take Snapshot",
+    "example": "升級前先拍快照，出問題馬上回到之前狀態",
+    "keyword": "還原,備份,快照",
+    "related": [
+      "clone",
+      "backup",
+      "restore"
+    ]
+  },
+  {
+    "id": "v04",
+    "en": "NAT mode",
+    "zh": "VMware 的 NAT 網路模式",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "VM 透過主機 IP 上網，外部無法直接存取 VM",
+    "fix": "VMware Network Adapter 選 NAT",
+    "example": "測試用 VM 選 NAT，不需要配置額外 IP",
+    "keyword": "NAT,網路,虛擬機",
+    "related": [
+      "bridged",
+      "host-only",
+      "network"
+    ]
+  },
+  {
+    "id": "b01",
+    "en": "BIOS / UEFI",
+    "zh": "主機板韌體介面",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "Basic Input/Output System，硬體初始化和開機管理",
+    "fix": "開機時按 Del、F2 或 F10 進入",
+    "example": "開機後按 DEL 進 BIOS 調整開機順序",
+    "keyword": "開機,韌體,設定",
+    "related": [
+      "boot order",
+      "Secure Boot",
+      "POST"
+    ]
+  },
+  {
+    "id": "b04",
+    "en": "RAID",
+    "zh": "磁碟陣列（資料保護/效能）",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "Redundant Array of Independent Disks",
+    "fix": "RAID 0=效能；RAID 1=鏡像；RAID 5=效能+保護",
+    "example": "RAID 1 兩顆硬碟互相鏡像，一顆壞不影響運作",
+    "keyword": "磁碟陣列,備援,效能",
+    "related": [
+      "RAID 0",
+      "RAID 1",
+      "RAID 5",
+      "mdadm"
+    ]
+  },
+  {
+    "id": "c01",
+    "en": "CI/CD",
+    "zh": "持續整合/持續部署",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "Continuous Integration/Continuous Deployment，自動化建置測試和部署流程",
+    "fix": "常用工具：GitHub Actions、GitLab CI、Jenkins",
+    "example": "程式碼 push 後自動測試和部署到 staging",
+    "keyword": "自動化,部署,流水線",
+    "related": [
+      "pipeline",
+      "GitHub Actions",
+      "Jenkins"
+    ]
+  },
+  {
+    "id": "c21",
+    "en": "Git",
+    "zh": "版本控制系統",
+    "cat": "cloud",
+    "lvl": 1,
+    "cause": "分散式版本控制，追蹤程式碼變更歷史",
+    "fix": "git add → commit → push 基本流程",
+    "example": "git commit -m 'fix: 修復登入bug' 記錄修改",
+    "keyword": "版本,控制,程式碼",
+    "related": [
+      "GitHub",
+      "branch",
+      "merge"
+    ]
+  }
+]
