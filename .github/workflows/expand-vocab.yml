@@ -1,0 +1,35 @@
+name: 自動擴充詞彙庫
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # 每週一凌晨2點執行
+  workflow_dispatch:       # 也可以手動觸發
+
+jobs:
+  expand-vocab:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 取得程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝套件
+        run: pip install anthropic
+
+      - name: 執行詞彙擴充腳本
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python expand_vocab.py
+
+      - name: 提交更新的詞彙庫
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add vocab.json
+          git diff --staged --quiet || git commit -m "自動擴充詞彙庫 - $(date '+%Y-%m-%d')"
+          git push
