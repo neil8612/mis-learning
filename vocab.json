@@ -460,5 +460,544 @@
       "branch",
       "merge"
     ]
+  },
+  {
+    "en": "segmentation fault",
+    "zh": "分段錯誤（程式崩潰）",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "程式試圖存取不允許的記憶體位置或記憶體損壞",
+    "fix": "檢查應用程式日誌、重啟服務、或升級/降級軟體版本。使用 dmesg 查看系統核心訊息：dmesg | tail -20",
+    "example": "Apache 網頁伺服器突然中止服務，error log 顯示 segmentation fault，需要重啟 httpd 服務",
+    "keyword": "程式崩潰,記憶體錯誤,核心傾印",
+    "related": [
+      "dmesg",
+      "coredump",
+      "strace"
+    ],
+    "id": "l0504163500",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "inode exhausted",
+    "zh": "inode 耗盡（檔案節點滿）",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "硬碟上的檔案節點（inode）數量達到上限，無法再建立新檔案，即使磁碟空間還有",
+    "fix": "查看 inode 使用情況：df -i，找出大量小檔案並刪除，或重新格式化磁碟分區",
+    "example": "MIS 發現伺服器無法建立新檔案，df -h 顯示空間充足，但 df -i 顯示 100% 使用率，需要清理 /tmp 目錄中的暫存檔",
+    "keyword": "檔案節點滿,小檔案堆積,磁碟配置",
+    "related": [
+      "df -i",
+      "find",
+      "du -a"
+    ],
+    "id": "l0504163501",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "file descriptor limit",
+    "zh": "檔案描述符限制（開啟檔案數上限）",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "程式或系統開啟的檔案/連線數達到 ulimit 設定的上限",
+    "fix": "檢查限制：ulimit -n，提高限制編輯 /etc/security/limits.conf，然後重新登入或重啟服務生效",
+    "example": "資料庫伺服器連線數突然下降，error log 顯示 too many open files，需要在 limits.conf 中提高 nofile 參數",
+    "keyword": "連線數上限,檔案限制,ulimit",
+    "related": [
+      "ulimit",
+      "lsof",
+      "/etc/security/limits.conf"
+    ],
+    "id": "l0504163502",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "swap space",
+    "zh": "交換空間（虛擬記憶體）",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "當實體 RAM 不足時，系統將資料暫存到硬碟的 swap 分區，速度較慢但能防止當機",
+    "fix": "檢查使用情況：free -h 或 swapon -s，若 swap 使用過高表示 RAM 不足，需要加記憶體或優化應用程式",
+    "example": "伺服器運行緩慢，free -h 顯示 swap 已使用 80%，表示記憶體不足，可能需要購置額外 RAM 或重啟服務",
+    "keyword": "虛擬記憶體,硬碟暫存,性能下降",
+    "related": [
+      "free -h",
+      "swapon",
+      "top"
+    ],
+    "id": "l0504163503",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "zombie process",
+    "zh": "殭屍程序（已終止但未清理）",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "子程序已結束但父程序未回收其狀態資訊，佔用系統資源且無法刪除",
+    "fix": "用 ps aux 找到殭屍程序（STAT 欄位顯示 Z），重啟其父程序，或強制刪除父程序：kill -9 <parent_pid>",
+    "example": "MIS 用 ps aux 發現多個 apache 子程序顯示 <defunct>，表示是殭屍程序，需要重啟 Apache 服務或殺死父程序",
+    "keyword": "殭屍程序,孤立程序,資源洩漏",
+    "related": [
+      "ps aux",
+      "kill",
+      "init"
+    ],
+    "id": "l0504163504",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Connection timeout",
+    "zh": "連線逾時",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "網路封包無法在規定時間內到達目標伺服器，通常是防火牆阻擋或伺服器離線",
+    "fix": "檢查防火牆規則、確認伺服器狀態、增加timeout數值參數",
+    "example": "使用者反映無法連線到公司內部系統，出現 Connection timeout 錯誤",
+    "keyword": "逾時,防火牆,連線失敗",
+    "related": [
+      "Firewall",
+      "Port",
+      "Packet loss"
+    ],
+    "id": "n0504163505",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Port forwarding",
+    "zh": "連接埠轉發",
+    "cat": "network",
+    "lvl": 2,
+    "cause": "將外部網路的流量導向內部伺服器特定連接埠，用於遠端存取或負載平衡",
+    "fix": "在路由器或防火牆設定規則：外部IP:外部Port → 內部IP:內部Port",
+    "example": "為了讓遠端員工透過VPN存取內部的RDP伺服器，需要設定連接埠轉發規則",
+    "keyword": "路由,重導向,內網穿透",
+    "related": [
+      "NAT",
+      "Firewall rule",
+      "VPN"
+    ],
+    "id": "n0504163506",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "SSL certificate expired",
+    "zh": "SSL憑證已過期",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "網站或服務的SSL/TLS安全憑證超過有效期限，導致瀏覽器無法驗證身份",
+    "fix": "向CA機構申請新憑證或使用自動更新工具（如Let's Encrypt），取代過期憑證",
+    "example": "員工開啟公司內部網站出現紅色警告，提示憑證已過期",
+    "keyword": "過期,加密,憑證更新",
+    "related": [
+      "HTTPS",
+      "TLS",
+      "Certificate authority"
+    ],
+    "id": "n0504163507",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Access denied / Permission denied",
+    "zh": "存取被拒 / 權限不足",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "使用者帳號無權限存取檔案、資料夾或服務，通常是ACL或群組策略限制",
+    "fix": "檢查使用者帳號權限、加入適當群組、調整資源的存取控制清單(ACL)",
+    "example": "新進員工無法存取部門共享資料夾，收到Permission denied錯誤",
+    "keyword": "權限,群組,ACL",
+    "related": [
+      "Authentication",
+      "Active Directory",
+      "NTFS permission"
+    ],
+    "id": "n0504163508",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Packet loss",
+    "zh": "封包遺失",
+    "cat": "network",
+    "lvl": 2,
+    "cause": "網路傳輸過程中部分資料封包未到達目標，導致連線不穩定或服務中斷",
+    "fix": "檢查網路線路品質、減少網路壅塞、檢查硬體故障、更換網路設備",
+    "example": "使用者反映VoIP通話常中斷、視訊會議卡頓，診斷發現有10%以上的封包遺失",
+    "keyword": "網路品質,不穩定,診斷",
+    "related": [
+      "Network latency",
+      "Bandwidth",
+      "QoS"
+    ],
+    "id": "n0504163509",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "docker build",
+    "zh": "建立Docker映像檔",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "需要將應用程式和依賴項打包成可執行的容器映像",
+    "fix": "執行 docker build -t image-name:tag . 命令，-t 用來標記映像名稱",
+    "example": "MIS要部署新應用時，需要先執行 docker build -t myapp:v1.0 . 來建立映像檔",
+    "keyword": "映像,標籤,Dockerfile,打包",
+    "related": [
+      "Dockerfile",
+      "docker tag",
+      "docker push"
+    ],
+    "id": "d0504163510",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "docker exec",
+    "zh": "在執行中的容器內執行命令",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "需要進入或對運行中的容器進行維護和除錯操作",
+    "fix": "執行 docker exec -it container-name /bin/bash 進入容器終端機進行互動",
+    "example": "伺服器應用異常，MIS執行 docker exec -it web-app bash 進入容器查看日誌或修改配置",
+    "keyword": "進入容器,互動式終端,容器維護",
+    "related": [
+      "docker attach",
+      "docker shell",
+      "docker logs"
+    ],
+    "id": "d0504163511",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "image layer",
+    "zh": "映像層級/映像分層",
+    "cat": "docker",
+    "lvl": 2,
+    "cause": "Docker映像由多個唯讀層組成，每一行Dockerfile指令產生一個層級，影響映像大小和快取效率",
+    "fix": "檢視映像層級用 docker history image-name，合併指令減少層數：RUN apt-get update && apt-get install -y package",
+    "example": "MIS發現Docker映像過大（2GB），可用 docker history 檢查各層大小，將多個RUN指令合併優化",
+    "keyword": "分層,層級,唯讀,快取,映像大小",
+    "related": [
+      "Dockerfile",
+      "docker build",
+      "Union File System"
+    ],
+    "id": "d0504163512",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "container crashed",
+    "zh": "容器崩潰/容器停止運行",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "應用程式發生錯誤、記憶體不足、依賴套件缺失或健康檢查失敗導致容器停止",
+    "fix": "用 docker ps -a 查看停止的容器，用 docker logs container-name 檢查錯誤訊息，用 docker restart container-name 重啟",
+    "example": "生產伺服器的資料庫容器突然離線，MIS執行 docker logs db-container 發現磁碟滿導致崩潰",
+    "keyword": "停止,失敗,除錯,日誌,重啟",
+    "related": [
+      "docker logs",
+      "HEALTHCHECK",
+      "exit code"
+    ],
+    "id": "d0504163513",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Volume mount",
+    "zh": "掛載卷宗/資料持久化",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "容器內資料在容器刪除時會遺失，需要掛載主機或命名卷宗來持久保存資料",
+    "fix": "用 docker run -v /host/path:/container/path image-name 或 docker run -v volume-name:/container/path image-name 掛載卷宗",
+    "example": "MIS部署MySQL容器，必須執行 docker run -v db-volume:/var/lib/mysql mysql:5.7 確保資料庫檔案不會遺失",
+    "keyword": "掛載,卷宗,持久化,資料保存,路徑映射",
+    "related": [
+      "docker volume",
+      "Dockerfile VOLUME",
+      "bind mount"
+    ],
+    "id": "d0504163514",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Container orchestration",
+    "zh": "容器編排（自動管理多個容器的部署、擴展、更新）",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "當應用程式以容器方式運行時，需要自動調度和管理這些容器在多台主機上的運作",
+    "fix": "使用 Kubernetes 或 Docker Swarm 管理容器叢集；kubectl apply -f deployment.yaml",
+    "example": "MIS需要確保生產環境中10個微服務容器自動負載均衡且故障自動轉移",
+    "keyword": "容器管理,自動部署,Kubernetes",
+    "related": [
+      "Docker",
+      "Kubernetes",
+      "Pod"
+    ],
+    "id": "c0504163515",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Image pull backoff",
+    "zh": "鏡像拉取失敗（無法從倉庫下載容器映像檔）",
+    "cat": "cloud",
+    "lvl": 1,
+    "cause": "容器執行時找不到指定的Docker映像，可能是名稱錯誤、倉庫不可達或認證失敗",
+    "fix": "檢查映像名稱拼寫；kubectl describe pod <pod-name>；驗證Registry認證：kubectl create secret docker-registry",
+    "example": "部署應用後發現Pod一直無法啟動，錯誤日誌顯示無法拉取 gcr.io/project/app:v1.0.1 映像",
+    "keyword": "Docker映像,拉取失敗,Registry認證",
+    "related": [
+      "Docker Registry",
+      "Docker Image",
+      "Kubernetes Pod"
+    ],
+    "id": "c0504163516",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Auto-scaling / Horizontal Pod Autoscaler (HPA)",
+    "zh": "自動擴展（根據負載自動增減容器或VM數量）",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "應用流量波動時需要動態調整資源，避免過度配置或資源不足",
+    "fix": "設定 HPA 規則：kubectl autoscale deployment myapp --min=2 --max=10 --cpu-percent=80",
+    "example": "MIS設定應用在CPU使用率超過80%時自動增加Pod數量，流量降低時自動縮減",
+    "keyword": "自動擴展,負載均衡,資源管理",
+    "related": [
+      "Kubernetes",
+      "Load Balancer",
+      "Metrics Server"
+    ],
+    "id": "c0504163517",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "ImagePullBackOff: no basic auth credentials",
+    "zh": "鏡像拉取失敗：缺少鏡像倉庫認證（私有Registry無法登入）",
+    "cat": "cloud",
+    "lvl": 1,
+    "cause": "容器引擎嘗試從私有Docker Registry拉取映像但沒有提供正確的用戶名密碼或Token",
+    "fix": "建立Registry密鑰：kubectl create secret docker-registry regcred --docker-server=myregistry.com --docker-username=user --docker-password=pass；在Pod spec中指定 imagePullSecrets: [name: regcred]",
+    "example": "MIS要部署應用使用公司內部Registry中的私有映像，但Kubernetes集群沒有存儲認證資訊",
+    "keyword": "私有Registry,認證,Docker認證密鑰",
+    "related": [
+      "Docker Registry",
+      "Kubernetes Secret",
+      "Image Pull"
+    ],
+    "id": "c0504163518",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Persistent Volume (PV) / Persistent Volume Claim (PVC)",
+    "zh": "持久化存儲（容器刪除後資料不會丟失的磁碟空間）",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "容器本身是無狀態的，重啟後內部資料會消失，需要外部存儲保留資料庫或日誌檔案",
+    "fix": "建立PV和PVC：先定義 PersistentVolume，再在Pod中使用 PersistentVolumeClaim；kubectl apply -f pvc.yaml",
+    "example": "MIS部署MySQL容器時需要確保即使Pod重啟，資料庫資料也能保留在NFS或雲端磁碟上",
+    "keyword": "資料持久化,存儲,PVC,PV",
+    "related": [
+      "Storage Class",
+      "StatefulSet",
+      "Volume"
+    ],
+    "id": "c0504163519",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "vMotion",
+    "zh": "虛擬機無停機遷移技術",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "VMware提供的功能，可在伺服器間即時轉移執行中的VM，不中斷服務",
+    "fix": "確保共享存儲(SAN/NAS)連接、網路暢通，右鍵VM選Migrate > Change compute resource only",
+    "example": "伺服器要進行硬體維護時，用vMotion將VM無縫轉移到其他實體主機，使用者完全不受影響",
+    "keyword": "無停機,遷移,即時轉移,Live Migration",
+    "related": [
+      "Storage vMotion",
+      "DRS",
+      "vSphere Cluster"
+    ],
+    "id": "v0504163520",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Memory pressure",
+    "zh": "記憶體壓力/記憶體不足",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "分配給VM的虛擬記憶體超過ESXi主機實際可用的物理記憶體",
+    "fix": "檢查vSphere Client監控 > Performance > Memory使用率，減少VM記憶體分配或調整Memory Reservation",
+    "example": "多台VM同時大量運算導致ESXi主機記憶體告急，出現'Memory pressure'警告，需立即調整VM配置",
+    "keyword": "記憶體不足,壓力,虛擬記憶體,Balloon driver",
+    "related": [
+      "Memory overcommit",
+      "Swap",
+      "Resource pool"
+    ],
+    "id": "v0504163521",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Datastore",
+    "zh": "資料存儲庫/儲存空間",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "ESXi用來存放VM檔案(VMDK磁碟、組態設定)的共享存儲單位，可來自SAN/NAS/本機磁碟",
+    "fix": "在vCenter > Storage > New Datastore掛載存儲，或透過VMFS/NFS協議連接陣列存儲",
+    "example": "MIS要新增VM但發現Datastore空間不足，需要向採購部申請擴充SAN容量或新增存儲陣列",
+    "keyword": "存儲,儲存空間,VMFS,NFS,SAN",
+    "related": [
+      "VMFS",
+      "Storage vMotion",
+      "Thin provisioning"
+    ],
+    "id": "v0504163522",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Virtual machine file is not accessible",
+    "zh": "虛擬機檔案無法訪問/檔案遺失",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "VM的VMDK或組態檔案所在的Datastore連接中斷、權限不足、或檔案遭刪除",
+    "fix": "檢查Datastore連接狀態、驗證LUN掛載、檢查文件權限、必要時從備份復原",
+    "example": "VM突然無法啟動，vSphere報錯'file is not accessible'，檢查發現SAN連線中斷，重新掛載Datastore後恢復",
+    "keyword": "無法訪問,檔案遺失,掛載失敗,LUN",
+    "related": [
+      "Datastore",
+      "Storage connectivity",
+      "VMDK"
+    ],
+    "id": "v0504163523",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Resource pool",
+    "zh": "資源池/資源分配管理",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "在ESXi叢集中為不同部門或應用劃分CPU、記憶體配額，確保資源公平分配與隔離",
+    "fix": "vCenter > Cluster > Resource Pools > New Resource Pool，設定Shares/Reservation/Limit參數",
+    "example": "公司有財務部和行銷部的VM共用一台ESXi，用Resource pool確保財務系統即使在行銷部高負載時仍有足夠資源",
+    "keyword": "資源分配,配額,隔離,Shares,Reservation",
+    "related": [
+      "DRS",
+      "CPU shares",
+      "Memory reservation"
+    ],
+    "id": "v0504163524",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "CMOS Battery",
+    "zh": "CMOS電池（主機板紀錄時間和設定的電池）",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "主機板上的紐扣電池，提供電力讓BIOS設定和系統時間在關機時保持",
+    "fix": "若BIOS設定遺失或時間重置，關機後取出電池30秒再裝回，或直接更換電池",
+    "example": "伺服器重開機後時間變成2010年，發現CMOS電池沒電了，需要更換",
+    "keyword": "電池,時間亂跳,BIOS重置",
+    "related": [
+      "BIOS Reset",
+      "System Time Error"
+    ],
+    "id": "b0504163525",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "POST (Power-On Self Test)",
+    "zh": "開機自檢（電腦啟動時自動檢測硬體是否正常）",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "電腦開機時，BIOS會自動測試CPU、記憶體、硬碟等硬體是否可用",
+    "fix": "若POST失敗會聽到蜂鳴聲或看到錯誤代碼，根據蜂鳴聲模式或訊息排查硬體問題",
+    "example": "新員工電腦無法開機，聽到持續蜂鳴聲，判斷是POST檢測失敗，可能是記憶體沒插好",
+    "keyword": "開機檢測,蜂鳴聲,硬體故障",
+    "related": [
+      "BIOS",
+      "Boot Error",
+      "Hardware Diagnostic"
+    ],
+    "id": "b0504163526",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Firmware Update / BIOS Flash",
+    "zh": "韌體更新（更新主機板或裝置的BIOS程式碼）",
+    "cat": "bios",
+    "lvl": 2,
+    "cause": "製造商發布新版BIOS以修復bug、加強相容性或改善效能",
+    "fix": "下載官方BIOS檔案，用USB隨身碟開機進入BIOS更新工具，或在Windows下用廠商提供的更新程式執行",
+    "example": "某型號伺服器SSD無法被BIOS識別，確認後需要更新BIOS到最新版本來支援該SSD",
+    "keyword": "更新,補檔,相容性,版本",
+    "related": [
+      "BIOS",
+      "Driver Update",
+      "System Stability"
+    ],
+    "id": "b0504163527",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "TPM (Trusted Platform Module)",
+    "zh": "信任平台模組（用於加密和安全驗證的晶片）",
+    "cat": "bios",
+    "lvl": 2,
+    "cause": "主機板內建的安全晶片，用於Windows BitLocker加密、驗證系統完整性等功能",
+    "fix": "在BIOS設定中啟用TPM（通常在Security選項），確保Windows能使用硬碟加密和安全開機功能",
+    "example": "公司推行硬碟全磁加密，發現某些舊電腦BIOS裡TPM沒啟用，需要逐台進BIOS開啟",
+    "keyword": "加密,安全,BitLocker,晶片",
+    "related": [
+      "BitLocker",
+      "Secure Boot",
+      "Data Security"
+    ],
+    "id": "b0504163528",
+    "source": "auto",
+    "added_date": "2026-05-04"
+  },
+  {
+    "en": "Boot Order / Boot Sequence",
+    "zh": "開機順序（電腦開機時依序嘗試從哪些裝置啟動）",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "BIOS會按設定的優先順序從硬碟、USB、光碟等裝置尋找可開機的作業系統",
+    "fix": "進入BIOS Setup（通常按Delete或F2），找到Boot選項，調整硬碟、USB或網路卡的優先順序，存檔後重開機",
+    "example": "要幫員工重新安裝Windows，需要進BIOS把USB隨身碟設定為第一開機裝置，完成後再改回硬碟優先",
+    "keyword": "開機,裝置,優先順序,USB",
+    "related": [
+      "BIOS",
+      "Windows Installation",
+      "System Recovery"
+    ],
+    "id": "b0504163529",
+    "source": "auto",
+    "added_date": "2026-05-04"
   }
 ]
