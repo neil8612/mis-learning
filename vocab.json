@@ -999,5 +999,552 @@
     "id": "b0504163529",
     "source": "auto",
     "added_date": "2026-05-04"
+  },
+  {
+    "en": "ulimit",
+    "zh": "使用者資源限制",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "系統為了防止單一使用者或進程耗盡系統資源而設定的上限",
+    "fix": "使用 ulimit -a 查看所有限制，ulimit -n 1024 臨時調整檔案描述符上限，編輯 /etc/security/limits.conf 永久修改",
+    "example": "應用程式報錯 Too many open files，需要執行 ulimit -n 來查看和提高檔案描述符限制",
+    "keyword": "資源限制,檔案描述符,open files",
+    "related": [
+      "file descriptor limit",
+      "dmesg",
+      "/etc/security/limits.conf"
+    ],
+    "id": "l0511054500",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "strace",
+    "zh": "系統呼叫追蹤工具",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "用來監控程式執行時的所有系統呼叫和訊號，幫助診斷程式掛起或崩潰的原因",
+    "fix": "執行 strace -e trace=open,read,write command 來追蹤特定系統呼叫，或 strace -p PID 追蹤執行中的進程",
+    "example": "某個服務突然無回應，用 strace -p 1234 可以看到它卡在哪個檔案或網路操作",
+    "keyword": "系統呼叫,除錯,掛起",
+    "related": [
+      "ltrace",
+      "ps aux",
+      "top",
+      "dmesg"
+    ],
+    "id": "l0511054501",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "nice/renice",
+    "zh": "程序優先級調整",
+    "cat": "linux",
+    "lvl": 1,
+    "cause": "Linux 用優先級（Priority）決定 CPU 分配時間，nice 值越低優先級越高",
+    "fix": "執行 nice -n 10 command 以降低優先級啟動，或 renice -n 5 -p PID 調整執行中的進程優先級",
+    "example": "備份程序佔用太多 CPU 影響業務，用 renice -n 15 -p 5678 降低它的優先級",
+    "keyword": "優先級,CPU分配,進程排程",
+    "related": [
+      "top",
+      "ps aux",
+      "CPU usage"
+    ],
+    "id": "l0511054502",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "lsof",
+    "zh": "列出開放的檔案和連接",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "顯示系統中所有開放的檔案、socket 和網路連接，用於診斷資源占用問題",
+    "fix": "執行 lsof -i :8080 查看佔用特定port的進程，lsof -p PID 查看某進程開放的檔案，lsof +D /path 查看目錄下被開放的檔案",
+    "example": "某個port無法綁定，用 lsof -i :3306 可以看到是哪個進程佔用了 MySQL 的 port",
+    "keyword": "檔案句柄,port佔用,連接診斷",
+    "related": [
+      "netstat",
+      "ss",
+      "ps aux",
+      "kill"
+    ],
+    "id": "l0511054503",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "iotop",
+    "zh": "I/O 讀寫監控工具",
+    "cat": "linux",
+    "lvl": 2,
+    "cause": "即時監控系統中每個進程的磁碟讀寫速度和 I/O 使用情況，找出造成磁碟瓶頸的程式",
+    "fix": "直接執行 iotop 進入互動式監控，或 iotop -b -n 1 獲得一次非互動式輸出，iotop -p PID 監控特定進程",
+    "example": "伺服器磁碟 I/O 很高但不知道是哪個程式造成的，用 iotop 可以看到是資料庫還是備份程式在狂寫入",
+    "keyword": "磁碟I/O,效能監控,讀寫速度",
+    "related": [
+      "iostat",
+      "vmstat",
+      "top",
+      "df -h"
+    ],
+    "id": "l0511054504",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "DHCP server not responding",
+    "zh": "DHCP伺服器無回應",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "員工電腦無法從DHCP伺服器取得IP位址，導致無法連網",
+    "fix": "檢查DHCP服務是否運行：systemctl status isc-dhcp-server，或重啟網卡：sudo systemctl restart networking",
+    "example": "辦公室有10台電腦突然都無法上網，檢查發現DHCP服務當機了",
+    "keyword": "IP分配,自動設定,網路連線",
+    "related": [
+      "IP address",
+      "Gateway",
+      "Network configuration"
+    ],
+    "id": "n0511054505",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Firewall blocking traffic",
+    "zh": "防火牆阻擋流量",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "防火牆規則過於嚴格，導致正常的網路流量被阻擋",
+    "fix": "查看防火牆日誌：sudo tail -f /var/log/ufw.log，調整規則：sudo ufw allow from [IP] to any port [PORT]",
+    "example": "新的應用程式無法連線到資料庫，查防火牆日誌發現該連線被拒絕了",
+    "keyword": "阻擋,規則,安全策略",
+    "related": [
+      "UFW",
+      "iptables",
+      "Port forwarding",
+      "Access control list"
+    ],
+    "id": "n0511054506",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Bandwidth saturation / Congestion",
+    "zh": "頻寬飽和／網路擁塞",
+    "cat": "network",
+    "lvl": 2,
+    "cause": "網路流量過大導致頻寬被佔滿，所有使用者連線速度變慢",
+    "fix": "用iftop監控：sudo iftop -i eth0，或netstat查詢：netstat -an | grep ESTABLISHED | wc -l，找出佔用頻寬的IP/程式後進行限制",
+    "example": "下午3點開始全公司網路變很慢，發現某部門在做大檔案備份導致頻寬被佔滿",
+    "keyword": "流量,速度,監控",
+    "related": [
+      "Network monitoring",
+      "QoS",
+      "Traffic shaping",
+      "Packet loss"
+    ],
+    "id": "n0511054507",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "ARP spoofing / ARP poisoning",
+    "zh": "ARP欺騙",
+    "cat": "network",
+    "lvl": 2,
+    "cause": "攻擊者偽造ARP封包，將特定IP的MAC位址改為自己的，進行中間人攻擊或DOS",
+    "fix": "安裝arp-scan檢測：sudo arp-scan -l，設定靜態ARP項目：sudo arp -s [IP] [MAC]，或使用arptables防護規則",
+    "example": "發現員工無法連線到某台伺服器，查ARP表發現該IP的MAC位址異常改變了",
+    "keyword": "欺騙,MAC,中間人攻擊",
+    "related": [
+      "MAC address",
+      "ARP table",
+      "Man-in-the-middle attack",
+      "Network security"
+    ],
+    "id": "n0511054508",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "DNS resolution failure / NXDOMAIN",
+    "zh": "DNS解析失敗／網域名稱不存在",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "DNS伺服器無法解析網域名稱，可能是DNS伺服器故障、網域不存在或DNS設定錯誤",
+    "fix": "測試DNS解析：nslookup google.com 或 dig google.com，查看/etc/resolv.conf的DNS設定，重設DNS：sudo systemctl restart systemd-resolved",
+    "example": "員工反映無法開啟公司內部網站，nslookup測試發現DNS解析失敗，NXDOMAIN錯誤",
+    "keyword": "解析,網域,查詢",
+    "related": [
+      "DNS",
+      "nslookup",
+      "dig",
+      "resolv.conf"
+    ],
+    "id": "n0511054509",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "docker pull",
+    "zh": "從 Docker Hub 下載映像檔",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "在執行容器前需要先取得映像檔，通常從公開或私有倉庫下載",
+    "fix": "docker pull [image_name]:[tag] 例如：docker pull nginx:latest",
+    "example": "MIS 需要部署新的 Web 伺服器，先執行 docker pull nginx 取得最新映像檔",
+    "keyword": "下載,映像檔,倉庫,準備",
+    "related": [
+      "docker build",
+      "image layer",
+      "Docker Hub"
+    ],
+    "id": "d0511054510",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Port mapping / Port forwarding",
+    "zh": "容器埠號與宿主機埠號的對應",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "容器內應用監聽的埠號需要對應到宿主機才能讓外部存取",
+    "fix": "docker run -p [host_port]:[container_port] [image_name] 例如：docker run -p 8080:80 nginx",
+    "example": "MIS 要讓員工透過公司網路存取容器內的 Web 應用，需設定埠號對應：-p 8080:80",
+    "keyword": "埠號,對應,連線,外部存取",
+    "related": [
+      "docker run",
+      "expose",
+      "networking"
+    ],
+    "id": "d0511054511",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Image not found / manifest unknown",
+    "zh": "找不到指定的映像檔或版本不存在",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "映像名稱拼錯、版本標籤不存在或倉庫權限不足導致無法下載",
+    "fix": "檢查映像名稱和標籤是否正確，執行 docker pull 確認可下載，或確認倉庫登入",
+    "example": "MIS 執行 docker run myapp:v2.0 出現錯誤，檢查後發現實際版本是 v2.1，需改為 docker run myapp:v2.1",
+    "keyword": "找不到,版本,標籤,倉庫",
+    "related": [
+      "docker pull",
+      "docker tag",
+      "registry"
+    ],
+    "id": "d0511054512",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Resource limit / Memory limit",
+    "zh": "限制容器能使用的 CPU 和記憶體資源",
+    "cat": "docker",
+    "lvl": 2,
+    "cause": "防止單一容器佔用過多系統資源，導致其他容器或宿主機無法正常運作",
+    "fix": "docker run -m 512m --cpus 1 [image_name] 例如：docker run -m 1g --cpus 2 mysql:latest",
+    "example": "MIS 在同一台伺服器執行多個資料庫容器，為了避免其中一個容器搶佔資源，為每個容器設定記憶體上限 -m 1g",
+    "keyword": "資源,限制,CPU,記憶體,效能",
+    "related": [
+      "container crashed",
+      "docker stats",
+      "performance"
+    ],
+    "id": "d0511054513",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Network driver / Bridge / Host mode",
+    "zh": "容器的網路連線模式（橋接、主機模式等）",
+    "cat": "docker",
+    "lvl": 2,
+    "cause": "不同的網路驅動程式決定容器如何與宿主機和其他容器通訊",
+    "fix": "docker run --network bridge [image_name] 或 --network host 根據需求選擇",
+    "example": "MIS 需要容器直接使用宿主機網路卡（如監聽特定 IP），使用 docker run --network host 提升效能",
+    "keyword": "網路,連線,通訊,驅動,模式",
+    "related": [
+      "Port mapping",
+      "docker network",
+      "networking"
+    ],
+    "id": "d0511054514",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "CrashLoopBackOff",
+    "zh": "容器持續崩潰迴圈",
+    "cat": "cloud",
+    "lvl": 1,
+    "cause": "Pod 啟動後立即崩潰，Kubernetes 不斷重啟嘗試，形成無限迴圈",
+    "fix": "檢查 Pod 日誌：kubectl logs <pod-name>；檢查應用程式配置和依賴服務是否正常",
+    "example": "應用程式啟動時連接資料庫失敗，導致容器不斷重啟，服務無法提供",
+    "keyword": "容器重啟,應用崩潰,日誌檢查",
+    "related": [
+      "Pod",
+      "kubectl logs",
+      "Liveness Probe"
+    ],
+    "id": "c0511054515",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Resource quota exceeded",
+    "zh": "資源配額超限",
+    "cat": "cloud",
+    "lvl": 1,
+    "cause": "Pod 或 Namespace 的 CPU、記憶體等資源申請超過管理員設定的限額",
+    "fix": "檢查配額：kubectl describe resourcequota；增加配額或優化應用資源需求；kubectl set resources deployment <name> --limits=cpu=1,memory=512Mi",
+    "example": "新增應用部署時收到錯誤，發現該命名空間記憶體配額已用滿，需要向管理員申請擴增",
+    "keyword": "配額限制,資源管理,命名空間",
+    "related": [
+      "ResourceQuota",
+      "Limits and Requests",
+      "Namespace"
+    ],
+    "id": "c0511054516",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "etcd backup and restore",
+    "zh": "etcd 備份與還原",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "etcd 是 Kubernetes 叢集的關鍵資料存儲，需定期備份以防止資料遺失",
+    "fix": "備份：etcdctl snapshot save backup.db；還原：etcdctl snapshot restore backup.db；確保備份檔案安全存放",
+    "example": "叢集發生故障，需要從備份恢復整個 Kubernetes 配置和應用狀態",
+    "keyword": "備份還原,叢集恢復,資料安全",
+    "related": [
+      "Kubernetes Cluster",
+      "Disaster Recovery",
+      "High Availability"
+    ],
+    "id": "c0511054517",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Ingress controller configuration",
+    "zh": "Ingress 控制器設定",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "Ingress 是外部流量進入叢集的入口，需要正確設定才能路由請求到服務",
+    "fix": "安裝 Ingress controller（如 Nginx）；建立 Ingress 資源：kubectl apply -f ingress.yaml；檢查狀態：kubectl get ingress",
+    "example": "設定多個應用的對外域名，需要透過 Ingress 根據主機名或路徑將流量導向不同服務",
+    "keyword": "路由配置,外部存取,負載均衡",
+    "related": [
+      "Service",
+      "LoadBalancer",
+      "DNS"
+    ],
+    "id": "c0511054518",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Network policy and pod communication",
+    "zh": "網路政策與 Pod 通訊",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "預設情況下 Pod 間完全互通，需要設定網路政策來限制和控制流量",
+    "fix": "建立 NetworkPolicy：kubectl apply -f network-policy.yaml；定義 ingress/egress 規則；測試連通性：kubectl exec <pod> -- ping <target-pod>",
+    "example": "應用安全審計要求隔離資料庫 Pod，只允許應用層 Pod 存取，其他 Pod 禁止通訊",
+    "keyword": "安全隔離,流量控制,微分段",
+    "related": [
+      "Kubernetes networking",
+      "Service mesh",
+      "Calico"
+    ],
+    "id": "c0511054519",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "CPU Ready",
+    "zh": "CPU 就緒時間",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "虛擬機等待實體 CPU 資源時的延遲時間，代表 CPU 過載",
+    "fix": "檢查 vSphere Client > Performance > CPU Ready，若超過 5% 需增加 vCPU 或調整負載分散",
+    "example": "使用者反映應用程式變慢，檢查發現 CPU Ready 達 15%，表示 VM 搶不到 CPU 資源",
+    "keyword": "CPU過載,效能指標,資源競爭",
+    "related": [
+      "Memory pressure",
+      "Resource pool",
+      "vMotion"
+    ],
+    "id": "v0511054520",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Cannot open the disk 'xxx.vmdk' or one of the snapshot disks it depends on",
+    "zh": "無法開啟虛擬機磁碟或快照",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "VMDK 檔案損毀、快照鏈結中斷或儲存空間存取權限問題",
+    "fix": "檢查 Datastore 權限，驗證快照檔案完整性，必要時從備份還原或重新整理快照鏈結",
+    "example": "VM 無法啟動，錯誤訊息提示快照磁碟路徑遺失，需檢查共享儲存是否掛載正常",
+    "keyword": "磁碟損毀,快照問題,儲存存取",
+    "related": [
+      "snapshot",
+      "Datastore",
+      "Virtual machine file is not accessible"
+    ],
+    "id": "v0511054521",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Swap file location",
+    "zh": "交換檔位置",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "當 VM 實體記憶體不足時，ESXi 將使用磁碟當虛擬記憶體的儲存位置",
+    "fix": "在 VM 設定中調整 Swap file location 至高速儲存，或增加 VM 記憶體避免使用 Swap",
+    "example": "VM 記憶體設定 8GB 但實際只有 4GB，系統自動使用 Swap 導致效能下降",
+    "keyword": "虛擬記憶體,磁碟交換,記憶體不足",
+    "related": [
+      "Memory pressure",
+      "Datastore",
+      "Virtual machine file is not accessible"
+    ],
+    "id": "v0511054522",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "vSAN (Virtual SAN)",
+    "zh": "虛擬儲存區域網路",
+    "cat": "vmware",
+    "lvl": 3,
+    "cause": "VMware 整合式儲存解決方案，將多台 ESXi 主機本地磁碟組成共享儲存池",
+    "fix": "部署 vSAN Cluster，需至少 3 台 ESXi 主機，每台配置 SSD 和 HDD，於 vCenter 啟用 vSAN 功能",
+    "example": "公司建置超融合基礎設施時，利用 vSAN 將 3 台主機磁碟虛擬化成統一儲存，節省成本",
+    "keyword": "超融合,儲存池,磁碟虛擬化",
+    "related": [
+      "Datastore",
+      "vMotion",
+      "Resource pool"
+    ],
+    "id": "v0511054523",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "VMware HA (High Availability)",
+    "zh": "虛擬機高可用性",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "當 ESXi 主機故障時，自動將其上的 VM 在其他健康主機重新啟動",
+    "fix": "在 Cluster 設定中啟用 HA，設定失敗重啟次數、隔離回應和監控敏感度參數",
+    "example": "主機 A 當機，HA 政策自動在主機 B 重新啟動該服務，確保服務中斷時間最短",
+    "keyword": "容錯機制,自動轉移,可用性",
+    "related": [
+      "vMotion",
+      "Resource pool",
+      "Datastore"
+    ],
+    "id": "v0511054524",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "CPU Fan Error",
+    "zh": "CPU風扇錯誤",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "CPU散熱風扇轉速過低或未正確連接到主板風扇接頭",
+    "fix": "檢查風扇是否正確插入主板CPU_FAN接頭；清理風扇灰塵；若故障需更換風扇",
+    "example": "伺服器開機時卡在POST畫面顯示CPU Fan Error，需立即檢查並更換故障風扇以避免CPU過熱",
+    "keyword": "風扇,散熱,溫度監控",
+    "related": [
+      "POST",
+      "Hardware Monitor",
+      "Thermal Management"
+    ],
+    "id": "b0511054525",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Integrated Graphics / iGPU",
+    "zh": "內建顯示晶片",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "CPU內部整合的圖形處理單元，可在BIOS中啟用或停用",
+    "fix": "進入BIOS Setup → Integrated Peripherals → Onboard Graphics → Enable/Disable，存檔重啟",
+    "example": "公司無頭伺服器或只需基本顯示時啟用iGPU；安裝獨立顯卡時需在BIOS停用以節省資源",
+    "keyword": "顯卡,GPU,BIOS設定",
+    "related": [
+      "PCIe Slot",
+      "BIOS Setup",
+      "Display Output"
+    ],
+    "id": "b0511054526",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Secure Boot",
+    "zh": "安全開機",
+    "cat": "bios",
+    "lvl": 2,
+    "cause": "UEFI安全機制，確保開機程式未被竄改，防止惡意軟體在啟動前執行",
+    "fix": "進入BIOS Setup → Security → Secure Boot → Enable/Disable；須與OS相容性檢查",
+    "example": "部署Windows 11時需啟用Secure Boot；若安裝Linux遇到啟動失敗，需於BIOS關閉Secure Boot",
+    "keyword": "安全,開機,加密驗證",
+    "related": [
+      "UEFI",
+      "TPM",
+      "Trusted Platform Module"
+    ],
+    "id": "b0511054527",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "XMP / DOCP (Memory Profile)",
+    "zh": "超頻記憶體設定檔",
+    "cat": "bios",
+    "lvl": 2,
+    "cause": "預設的高頻記憶體超頻設定，由廠商認證以提升效能，避免手動超頻風險",
+    "fix": "進入BIOS Setup → OC Settings (或Advanced) → XMP/DOCP → Profile 1/2 → Enable，存檔重啟",
+    "example": "新購置的DDR5高階伺服器記憶體在BIOS啟用XMP後效能提升30%，但需確保電源供應充足",
+    "keyword": "超頻,記憶體速度,效能",
+    "related": [
+      "BIOS Setup",
+      "Memory Speed",
+      "Overclocking"
+    ],
+    "id": "b0511054528",
+    "source": "auto",
+    "added_date": "2026-05-11"
+  },
+  {
+    "en": "Virtualization Technology / VT-x / AMD-V",
+    "zh": "虛擬化技術",
+    "cat": "bios",
+    "lvl": 2,
+    "cause": "CPU提供的硬體虛擬化支援，允許虛擬機監控程式(Hypervisor)高效運行多個虛擬機",
+    "fix": "進入BIOS Setup → CPU Features → Intel Virtualization Technology (或AMD SVM) → Enable，存檔重啟",
+    "example": "部署Hyper-V或VMware ESXi虛擬主機時必須在BIOS啟用VT-x；若虛擬機效能低下需檢查此項是否開啟",
+    "keyword": "虛擬機,超管,硬體支援",
+    "related": [
+      "Hypervisor",
+      "Virtual Machine",
+      "CPU Features"
+    ],
+    "id": "b0511054529",
+    "source": "auto",
+    "added_date": "2026-05-11"
   }
 ]
