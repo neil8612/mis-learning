@@ -1546,5 +1546,448 @@
     "id": "b0511054529",
     "source": "auto",
     "added_date": "2026-05-11"
+  },
+  {
+    "en": "VPN (Virtual Private Network)",
+    "zh": "虛擬私人網路",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "員工需要安全地遠端連接公司內網，加密傳輸資料防止被竊聽",
+    "fix": "安裝 VPN client，輸入帳號密碼連接到 VPN gateway；檢查 VPN 服務是否運行：systemctl status openvpn",
+    "example": "上班族在家工作需要連接公司系統，使用 VPN 確保連線安全",
+    "keyword": "遠端,加密,安全連線",
+    "related": [
+      "SSH",
+      "SSL certificate expired",
+      "Port forwarding"
+    ],
+    "id": "n0518060000",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Rate limiting / IP blocking",
+    "zh": "速率限制 / IP 封鎖",
+    "cat": "network",
+    "lvl": 2,
+    "cause": "防止 DDoS 攻擊、暴力破解或異常流量，自動封鎖惡意 IP",
+    "fix": "設定防火牆規則：sudo iptables -A INPUT -s 192.168.1.100 -j DROP；或使用 fail2ban 自動封鎖",
+    "example": "發現某 IP 短時間內多次登入失敗，系統自動封鎖該 IP 30 分鐘",
+    "keyword": "攻擊防護,自動封鎖,異常流量",
+    "related": [
+      "Firewall blocking traffic",
+      "DDoS",
+      "Brute force"
+    ],
+    "id": "n0518060001",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Certificate pinning / Public Key Pinning",
+    "zh": "憑證綁定 / 公鑰綁定",
+    "cat": "network",
+    "lvl": 2,
+    "cause": "防止中間人攻擊 (MITM)，應用程式驗證特定的 SSL 憑證而非信任所有 CA",
+    "fix": "在應用程式或瀏覽器設定中綁定特定的公鑰 hash；檢查憑證：openssl s_client -connect example.com:443",
+    "example": "手機 app 與銀行伺服器通訊時，強制使用特定的 SSL 憑證，防止被偽造憑證攔截",
+    "keyword": "MITM防護,憑證驗證,公鑰",
+    "related": [
+      "SSL certificate expired",
+      "HTTPS",
+      "Public Key Infrastructure"
+    ],
+    "id": "n0518060002",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "MAC address / MAC filtering",
+    "zh": "MAC 位址 / MAC 位址過濾",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "每台網卡有唯一的 MAC 位址，可用來識別裝置或限制網路存取",
+    "fix": "查看 MAC 位址：ipconfig /all (Windows) 或 ip link show (Linux)；設定 WiFi 白名單在路由器上過濾",
+    "example": "公司 WiFi 只允許公司電腦連接，MIS 將員工裝置的 MAC 位址加入白名單",
+    "keyword": "裝置識別,白名單,網卡",
+    "related": [
+      "ARP spoofing / ARP poisoning",
+      "DHCP server not responding",
+      "Firewall"
+    ],
+    "id": "n0518060003",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Two-factor authentication (2FA) / Multi-factor authentication (MFA)",
+    "zh": "雙因素驗證 / 多因素驗證",
+    "cat": "network",
+    "lvl": 1,
+    "cause": "密碼容易被盜取，需要額外驗證方式（簡訊、APP、硬體金鑰）才能登入",
+    "fix": "在帳號設定啟用 2FA，綁定 Google Authenticator 或其他驗證 app；使用命令：sudo apt-get install libpam-google-authenticator",
+    "example": "員工登入公司系統，輸入密碼後還要輸入手機 Google Authenticator 的 6 位數驗證碼",
+    "keyword": "帳號安全,多層驗證,身份確認",
+    "related": [
+      "SSH",
+      "Access denied / Permission denied",
+      "VPN"
+    ],
+    "id": "n0518060004",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "docker inspect",
+    "zh": "查看容器或映像的詳細配置信息",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "需要了解容器的網路設定、環境變數、掛載點等詳細信息時使用",
+    "fix": "docker inspect <container_id或image_id>，可用 --format 篩選特定資訊",
+    "example": "MIS 需要檢查容器的 IP 地址或環境變數是否正確設定",
+    "keyword": "inspect,詳細資訊,配置查詢",
+    "related": [
+      "docker ps",
+      "docker logs",
+      "Environment variable"
+    ],
+    "id": "d0518060005",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Out of memory / OOM killed",
+    "zh": "容器因記憶體不足被強制終止",
+    "cat": "docker",
+    "lvl": 1,
+    "cause": "容器使用的記憶體超過限制，系統自動殺死程序釋放資源",
+    "fix": "增加 --memory 參數，或檢查應用程式是否有記憶體洩漏；docker run --memory 2g <image>",
+    "example": "生產服務突然掉線，查看 docker logs 發現被 OOM 殺死",
+    "keyword": "OOM,記憶體溢出,容器停止",
+    "related": [
+      "Resource limit",
+      "Memory limit",
+      "docker logs"
+    ],
+    "id": "d0518060006",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "docker-compose",
+    "zh": "用單個 YAML 文件定義和運行多個容器應用",
+    "cat": "docker",
+    "lvl": 2,
+    "cause": "當需要同時管理多個相互依賴的容器（如 Web + Database + Cache）時使用",
+    "fix": "建立 docker-compose.yml，執行 docker-compose up -d 啟動所有服務",
+    "example": "MIS 用 docker-compose 快速部署測試環境：Web 伺服器、MySQL、Redis 一起起動",
+    "keyword": "compose,yaml,多容器編排",
+    "related": [
+      "docker run",
+      "Volume mount",
+      "Network driver"
+    ],
+    "id": "d0518060007",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Dangling images / Unused layers",
+    "zh": "無用的映像層或懸掛映像（沒被任何容器使用的舊映像）",
+    "cat": "docker",
+    "lvl": 2,
+    "cause": "頻繁構建映像或更新應用時，舊的映像版本仍保留在系統中佔用空間",
+    "fix": "執行 docker image prune 清理，或 docker system prune -a 清理所有無用資源",
+    "example": "MIS 發現伺服器硬碟滿了，清理後發現累積了 50GB 的舊 Docker 映像",
+    "keyword": "prune,清理,磁碟空間",
+    "related": [
+      "image layer",
+      "docker build",
+      "System resource"
+    ],
+    "id": "d0518060008",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Health check / HEALTHCHECK",
+    "zh": "定期檢測容器是否正常運行的機制",
+    "cat": "docker",
+    "lvl": 2,
+    "cause": "容器可能在運行但內部服務已當機，需要主動探測健康狀態自動重啟",
+    "fix": "在 Dockerfile 中加入 HEALTHCHECK 指令，或在 docker run 時設定 --health-cmd",
+    "example": "MIS 設定 HEALTHCHECK 讓 Web 容器定期檢查 HTTP 連線，異常時自動重啟",
+    "keyword": "healthcheck,探測,自動重啟",
+    "related": [
+      "container crashed",
+      "docker logs",
+      "docker inspect"
+    ],
+    "id": "d0518060009",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Pod Eviction",
+    "zh": "Pod 被驅逐（容器被強制刪除）",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "節點資源不足（CPU/記憶體）或節點故障時，Kubernetes 會自動終止 Pod 以釋放資源",
+    "fix": "檢查節點資源: kubectl top nodes; 增加節點資源或調整 Pod 資源限制; 設定 Pod 優先級: priorityClassName",
+    "example": "MIS 發現生產環境某些 Pod 頻繁重啟消失，查看事件發現 'Pod evicted due to NodeMemoryPressure'",
+    "keyword": "驅逐,節點壓力,資源釋放",
+    "related": [
+      "Resource quota exceeded",
+      "CrashLoopBackOff",
+      "Node pressure"
+    ],
+    "id": "c0518060010",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Service mesh (e.g., Istio)",
+    "zh": "服務網格（管理微服務間通訊的中間層）",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "在微服務架構中需要統一管理服務通訊、流量控制、安全策略和可觀測性",
+    "fix": "安裝 Istio: curl https://get.istio.io | bash; 注入 sidecar: kubectl label ns default istio-injection=enabled; 設定 VirtualService 和 DestinationRule",
+    "example": "MIS 要實現灰度發布和熔斷機制，使用 Istio 的 VirtualService 將流量分配 90% 到舊版本、10% 到新版本",
+    "keyword": "流量管理,邊車代理,微服務通訊",
+    "related": [
+      "Container orchestration",
+      "Ingress controller configuration",
+      "Network policy and pod communication"
+    ],
+    "id": "c0518060011",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Helm chart",
+    "zh": "Helm 套件（Kubernetes 應用部署模板和套件管理工具）",
+    "cat": "cloud",
+    "lvl": 1,
+    "cause": "Kubernetes manifest 檔案複雜且重複，需要透過模板化方式簡化應用部署和版本管理",
+    "fix": "安裝 Helm: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash; 部署應用: helm install release-name chart-name; 升級: helm upgrade release-name chart-name",
+    "example": "MIS 要快速部署 MySQL、Redis、Nginx，直接用 Helm: helm install mysql bitnami/mysql 而不用手寫 YAML",
+    "keyword": "套件管理,模板化,快速部署",
+    "related": [
+      "Container orchestration",
+      "CI/CD"
+    ],
+    "id": "c0518060012",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Secret and ConfigMap",
+    "zh": "密鑰和配置映射（儲存敏感資料和設定檔的物件）",
+    "cat": "cloud",
+    "lvl": 1,
+    "cause": "應用需要資料庫密碼、API 密鑰等敏感資訊和環境變數，不能硬編碼在容器中",
+    "fix": "建立 Secret: kubectl create secret generic db-secret --from-literal=password=mypass; 建立 ConfigMap: kubectl create configmap app-config --from-file=config.yaml; Pod 中掛載: volumeMounts 和 env",
+    "example": "MIS 部署應用時，將資料庫密碼存入 Secret，應用透過環境變數讀取，避免洩露敏感資訊",
+    "keyword": "敏感資訊,環境變數,安全存儲",
+    "related": [
+      "Persistent Volume (PV) / Persistent Volume Claim (PVC)",
+      "Pod security policy"
+    ],
+    "id": "c0518060013",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Namespace resource quota and limit range",
+    "zh": "命名空間資源配額和限制範圍（控制特定命名空間的資源使用上限）",
+    "cat": "cloud",
+    "lvl": 2,
+    "cause": "多個團隊共用同一 Kubernetes 叢集時，需要防止某個應用耗盡所有資源，導致其他應用無法運行",
+    "fix": "建立 ResourceQuota: kubectl apply -f resourcequota.yaml (定義 requests/limits); 建立 LimitRange: kubectl apply -f limitrange.yaml (設定 Pod 預設資源限制)",
+    "example": "MIS 為開發團隊建立命名空間，設定配額限制 CPU 10 cores、記憶體 20Gi，防止測試應用佔用過多資源影響生產",
+    "keyword": "資源管理,多租戶隔離,成本控制",
+    "related": [
+      "Resource quota exceeded",
+      "Auto-scaling / Horizontal Pod Autoscaler (HPA)"
+    ],
+    "id": "c0518060014",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "vSphere Client",
+    "zh": "vSphere客户端（VMware虛擬化管理介面）",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "用來連接ESXi主機或vCenter Server進行虛擬機管理的圖形化工具",
+    "fix": "下載安裝vSphere Client，輸入ESXi或vCenter IP，用管理員帳號登入",
+    "example": "MIS需要透過vSphere Client創建VM、調整CPU/記憶體配置或檢查硬體狀態",
+    "keyword": "管理介面,遠端連接,GUI工具",
+    "related": [
+      "vCenter Server",
+      "ESXi",
+      "Virtual machine"
+    ],
+    "id": "v0518060015",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Insufficient memory resources",
+    "zh": "記憶體資源不足",
+    "cat": "vmware",
+    "lvl": 1,
+    "cause": "ESXi主機實體記憶體耗盡，無法為新VM分配記憶體或VM無法啟動",
+    "fix": "檢查vSphere Client中各VM的記憶體使用量，關閉非必要VM或增加主機實體記憶體",
+    "example": "部門新增3台VM後系統變慢，檢查發現主機只剩2GB可用記憶體",
+    "keyword": "記憶體滿,資源不足,VM啟動失敗",
+    "related": [
+      "Memory pressure",
+      "Resource pool",
+      "CPU Ready"
+    ],
+    "id": "v0518060016",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "VM disk is locked",
+    "zh": "虛擬機磁碟被鎖定",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "VM正在進行快照、備份或遷移操作，或上次未正常關機導致磁碟鎖定",
+    "fix": "等待進行中的操作完成；若持續鎖定，在vSphere Client刪除孤立的.lck檔案或重啟ESXi主機",
+    "example": "嘗試刪除VM時出現錯誤訊息：The file is in use，需要強制解除鎖定",
+    "keyword": "磁碟鎖定,.lck檔案,無法刪除",
+    "related": [
+      "snapshot",
+      "Cannot open the disk 'xxx.vmdk'",
+      "Virtual machine file is not accessible"
+    ],
+    "id": "v0518060017",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Thin Provisioning vs Thick Provisioning",
+    "zh": "精簡配置 vs 厚重配置（虛擬磁碟分配方式）",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "控制虛擬磁碟空間的預先分配方式：精簡只佔用實際使用空間，厚重預先分配全部空間",
+    "fix": "建立VM時在存儲設定選擇Thin Provisioning可節省空間；監控Datastore使用量防止爆滿",
+    "example": "新增100台VM，用Thin Provisioning可減少30% Datastore消耗，但要定期監控容量",
+    "keyword": "磁碟配置,空間節省,存儲效率",
+    "related": [
+      "Datastore",
+      "Storage",
+      "Virtual machine"
+    ],
+    "id": "v0518060018",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Host connection state is down",
+    "zh": "主機連接狀態已斷開",
+    "cat": "vmware",
+    "lvl": 2,
+    "cause": "ESXi主機網路中斷、vCenter與主機通訊失敗，或主機發生硬體故障",
+    "fix": "檢查主機網路連線；重啟ESXi主機管理網卡；驗證vCenter到主機的IP連通性（ping主機IP）",
+    "example": "vCenter顯示某台ESXi主機灰色離線，檢查發現主機交換器連線鬆脫",
+    "keyword": "主機離線,連接斷開,網路故障",
+    "related": [
+      "vCenter Server",
+      "ESXi",
+      "vMotion"
+    ],
+    "id": "v0518060019",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "BIOS Settings Reset / Clear CMOS",
+    "zh": "重置BIOS設定/清除CMOS",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "當電腦無法開機或BIOS設定異常時，需要恢復出廠預設值",
+    "fix": "關機斷電 → 打開機殼 → 移除CMOS電池30秒 → 重新裝上 → 開機進BIOS重新設定",
+    "example": "使用者報告主機開不了機，進入BIOS看到異常設定，執行Clear CMOS後恢復正常",
+    "keyword": "恢復預設,清除設定,無法開機",
+    "related": [
+      "CMOS Battery",
+      "POST (Power-On Self Test)",
+      "BIOS / UEFI"
+    ],
+    "id": "b0518060020",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Memory Test Error / Memory Dump",
+    "zh": "記憶體測試錯誤/記憶體傾印",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "記憶體故障或不相容導致系統無法正常讀取，會產生藍屏或自動重啟",
+    "fix": "進BIOS執行Memory Test → 或逐一拔插RAM測試 → 更換或重新安裝記憶體",
+    "example": "公司電腦升級後經常當機，執行記憶體測試發現有壞軌，更換新RAM後解決",
+    "keyword": "記憶體故障,藍屏,重啟",
+    "related": [
+      "POST (Power-On Self Test)",
+      "Boot Order / Boot Sequence"
+    ],
+    "id": "b0518060021",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "HDD/SSD Not Detected",
+    "zh": "硬碟未被偵測到",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "硬碟SATA線接觸不良、故障或BIOS中未啟用SATA控制器",
+    "fix": "檢查SATA線接頭 → 進BIOS確認SATA Mode未設為Disabled → 嘗試更換SATA孔位 → 更換硬碟線",
+    "example": "新裝的SSD在Windows找不到，檢查BIOS發現SATA Port 3被停用，啟用後問題解決",
+    "keyword": "硬碟偵測,SATA,無法識別",
+    "related": [
+      "BIOS / UEFI",
+      "Boot Order / Boot Sequence"
+    ],
+    "id": "b0518060022",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "Overclocking / CPU Voltage Setting",
+    "zh": "超頻/CPU電壓設定",
+    "cat": "bios",
+    "lvl": 2,
+    "cause": "在BIOS中修改CPU倍頻、FSB或電壓以提升效能，但設定不當會造成系統不穩定或硬體損傷",
+    "fix": "進BIOS → 找CPU Multiplier或CPU Voltage選項 → 微幅調整(如±0.05V) → 測試穩定性",
+    "example": "遊戲工作站需要更高效能，MIS協助調整CPU超頻設定，並用壓力測試確認穩定性",
+    "keyword": "超頻,效能,電壓調整",
+    "related": [
+      "Virtualization Technology / VT-x / AMD-V",
+      "XMP / DOCP (Memory Profile)"
+    ],
+    "id": "b0518060023",
+    "source": "auto",
+    "added_date": "2026-05-18"
+  },
+  {
+    "en": "USB/Peripheral Device Not Recognized in BIOS",
+    "zh": "USB/周邊設備在BIOS中無法識別",
+    "cat": "bios",
+    "lvl": 1,
+    "cause": "USB控制器未啟用、驅動程式問題或USB設備故障，導致開機時無法偵測",
+    "fix": "進BIOS → Integrated Peripherals → 確認USB Controller/XHCI Controller已Enable → 存檔重啟",
+    "example": "使用者USB滑鼠鍵盤無法在BIOS使用，檢查後發現USB控制器被停用，啟用後恢復正常",
+    "keyword": "USB無法用,設備偵測,周邊裝置",
+    "related": [
+      "BIOS / UEFI",
+      "Boot Order / Boot Sequence"
+    ],
+    "id": "b0518060024",
+    "source": "auto",
+    "added_date": "2026-05-18"
   }
 ]
